@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +35,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     ViewPager mViewPager;
     private static String TAG = "MAIN";
 
-    //private Button button_scan;
-    private Button buttonScan;
-    private TextView txtFormat, txtContent;
+    private String upc;
+    private String upcFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), buttonScan, txtFormat, txtContent, this);
+
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), this);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -72,31 +73,25 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                             .setTabListener(this));
         }
     }
-    /*
+
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
         //retrieve result of scanning - instantiate ZXing object
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         //check we have a valid result
         if (scanningResult != null) {
-            //get content from Intent Result
-            String scanContent = scanningResult.getContents();
-            //get format name of data scanned
-            String scanFormat = scanningResult.getFormatName();
-            //output to UI
-            Log.v(TAG, "Setting format and content");
-            txtFormat.setText("FORMAT: "+scanFormat);
-            txtContent.setText("CONTENT: "+scanContent);
-            Log.v(TAG, "onActivityResult finished");
-        }
-        else{
-            //invalid scan data or scan canceled
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "No scan data received!", Toast.LENGTH_SHORT);
-            toast.show();
+            String upc = scanningResult.getContents();
+            String upcFormat = scanningResult.getFormatName();
+            String toastShow = upc+" "+upcFormat;
+            Toast.makeText(this, toastShow, Toast.LENGTH_LONG).show();
+
+            // here we need to find out if it is an item or coupon, by checking the fragment in view?
+            //storeItem(upc, upcFormat);
+            storeCoupon(upc, upcFormat);
         }
     }
-    */
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
@@ -118,6 +113,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             case R.id.action_refresh:
                 openRefresh();
                 return true;
+            case R.id.settings_login:
+                openLogin();
+                return true;
+            case R.id.settings_shopping_cart:
+                openCart();
+                return true;
+            case R.id.settings_stats:
+                openStats();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -135,6 +139,30 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         Toast.makeText(this, "Refresh", Toast.LENGTH_LONG).show();
     }
 
+    private void openLogin() {
+        Toast.makeText(this, "Login", Toast.LENGTH_LONG).show();
+    }
+
+    private void openCart() {
+        Toast.makeText(this, "Shopping Cart", Toast.LENGTH_LONG).show();
+    }
+
+    private void openStats() {
+        Toast.makeText(this, "Statistics", Toast.LENGTH_LONG).show();
+    }
+
+    public void storeItem(String upc, String upcFormat)
+    {
+        //dbSubmitItem submit = new dbSubmitItem(upc);
+
+    }
+
+    public void storeCoupon(String upc, String upcFormat)
+    {
+        dbSubmitCoupon db = new dbSubmitCoupon();
+        db.test(upc);
+        db.postCoupon();
+    }
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
@@ -157,15 +185,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private Button b;
-        private TextView f, c;
-        private Activity a;
-        public SectionsPagerAdapter(FragmentManager fm, Button b, TextView f, TextView c, Activity a) {
+        private Activity activity;
+        public SectionsPagerAdapter(FragmentManager fm, Activity a) {
             super(fm);
-            this.b = b;
-            this.f = f;
-            this.c = c;
-            this.a = a;
+            this.activity = a;
         }
 
         @Override
@@ -178,11 +201,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             switch(position)
             {
                 case 0:
-                    fragment = new ItemFragment(f,c,b,a);
+                    fragment = new ItemFragment(activity);
                     args.putInt(ItemFragment.ARG_SECTION_NUMBER, position + 1);
                     break;
                 case 1:
-                    fragment = new CouponFragment(f,c,b,a);
+                    fragment = new CouponFragment(activity);
                     args.putInt(CouponFragment.ARG_SECTION_NUMBER, position + 1);
                     break;
                 default:
@@ -219,18 +242,13 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public static class ItemFragment extends Fragment {
 
         private static final String ARG_SECTION_NUMBER = "section_number_1";
-        private Button buttonScan;
-        private TextView txtFormat, txtContent;
         private Activity thisActivity;
 
         public ItemFragment() {
 
         }
 
-        public ItemFragment(TextView f, TextView c, Button b, Activity a) {
-            txtFormat = f;
-            txtContent = c;
-            buttonScan = b;
+        public ItemFragment(Activity a) {
             thisActivity = a;
         }
 
@@ -239,8 +257,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                                  Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_item, container, false);
             Button b = (Button) v.findViewById(R.id.scan_button);
-            txtFormat = (TextView) v.findViewById(R.id.scan_format);
-            txtContent = (TextView) v.findViewById(R.id.scan_content);
             if(b != null)
             {
                 b.setOnClickListener(new View.OnClickListener() {
@@ -248,67 +264,16 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     public void onClick(View v) {
                         //check for scan button
                         if(v.getId()==R.id.scan_button){
-                            Log.v(TAG, "Item scan button");
                             //instantiate ZXing integration class
                             IntentIntegrator scanIntegrator = new IntentIntegrator(thisActivity);
                             //start scanning
-                            Log.v(TAG, "before scan");
                             scanIntegrator.initiateScan();
-                            Log.v(TAG, "finished scan");
-                        }
-                    }
-                    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-
-                        //retrieve result of scanning - instantiate ZXing object
-                        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-                        //check we have a valid result
-                        if (scanningResult != null) {
-                            //get content from Intent Result
-                            String scanContent = scanningResult.getContents();
-                            //get format name of data scanned
-                            String scanFormat = scanningResult.getFormatName();
-                            //output to UI
-                            Log.v(TAG, "Setting format and content");
-                            txtFormat.setText("FORMAT: "+scanFormat);
-                            txtContent.setText("CONTENT: "+scanContent);
-                            Log.v(TAG, "onActivityResult finished");
-                        }
-                        else{
-                            //invalid scan data or scan canceled
-                            Toast toast = Toast.makeText(thisActivity.getApplicationContext(),
-                                    "No scan data received!", Toast.LENGTH_SHORT);
-                            toast.show();
                         }
                     }
                 });
             }
             return v;
         }
-
-        public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-
-            //retrieve result of scanning - instantiate ZXing object
-            IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-            //check we have a valid result
-            if (scanningResult != null) {
-                //get content from Intent Result
-                String scanContent = scanningResult.getContents();
-                //get format name of data scanned
-                String scanFormat = scanningResult.getFormatName();
-                //output to UI
-                Log.v(TAG, "Setting format and content");
-                txtFormat.setText("FORMAT: "+scanFormat);
-                txtContent.setText("CONTENT: "+scanContent);
-                Log.v(TAG, "onActivityResult finished");
-            }
-            else{
-                //invalid scan data or scan canceled
-                Toast toast = Toast.makeText(thisActivity.getApplicationContext(),
-                        "No scan data received!", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-
     }
 
 
@@ -319,17 +284,12 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public static class CouponFragment extends Fragment {
 
         private static final String ARG_SECTION_NUMBER = "section_number_2";
-        private Button buttonScan;
-        private TextView txtFormat, txtContent;
         private Activity thisActivity;
 
         public CouponFragment() {
 
         }
-        public CouponFragment(TextView f, TextView c, Button b, Activity a) {
-            txtFormat = f;
-            txtContent = c;
-            buttonScan = b;
+        public CouponFragment(Activity a) {
             thisActivity = a;
         }
 
@@ -338,8 +298,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_item, container, false);
             Button b = (Button) v.findViewById(R.id.scan_button);
-            txtFormat = (TextView) v.findViewById(R.id.scan_format);
-            txtContent = (TextView) v.findViewById(R.id.scan_content);
             if(b != null)
             {
                 b.setOnClickListener(new View.OnClickListener() {
@@ -356,30 +314,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 });
             }
             return v;
-        }
-
-        public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-
-            //retrieve result of scanning - instantiate ZXing object
-            IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-            //check we have a valid result
-            if (scanningResult != null) {
-                //get content from Intent Result
-                String scanContent = scanningResult.getContents();
-                //get format name of data scanned
-                String scanFormat = scanningResult.getFormatName();
-                //output to UI
-                Log.v(TAG, "Setting format and content");
-                txtFormat.setText("FORMAT: "+scanFormat);
-                txtContent.setText("CONTENT: "+scanContent);
-                Log.v(TAG, "onActivityResult finished");
-            }
-            else{
-                //invalid scan data or scan canceled
-                Toast toast = Toast.makeText(thisActivity.getApplicationContext(),
-                        "No scan data received!", Toast.LENGTH_SHORT);
-                toast.show();
-            }
         }
     }
 }

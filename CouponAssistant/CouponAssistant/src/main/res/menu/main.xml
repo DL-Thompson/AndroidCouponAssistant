@@ -14,9 +14,18 @@
         app:showAsAction="always" />
 
     <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
         android:orderInCategory="100"
         android:icon="@drawable/ic_action_overflow"
-        android:title="@string/action_settings"
-        app:showAsAction="always" />
+        app:showAsAction="always" >
+        <menu>
+            <item android:id="@+id/settings_login"
+                android:title="@string/settings_login" />
+            <item android:id="@+id/settings_stats"
+                android:title="@string/settings_stats" />
+            <item android:id="@+id/settings_shopping_cart"
+                android:title="@string/settings_shop_cart" />
+        </menu>
+    </item>
 
 </menu>

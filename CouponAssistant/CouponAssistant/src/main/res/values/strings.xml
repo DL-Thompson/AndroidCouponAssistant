@@ -9,7 +9,11 @@
     <string name="button_scan">SCAN</string>
     <string name="fragment_item_text">ITEM TEXT</string>
     <string name="fragment_coupon_text">COUPON TEXT</string>
+
     <string name="action_search">Search</string>
     <string name="action_refresh">Refresh</string>
 
+    <string name="settings_login">Login</string>
+    <string name="settings_stats">User Stats</string>
+    <string name="settings_shop_cart">Shopping Cart</string>
 </resources>
