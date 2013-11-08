@@ -16,4 +16,6 @@
     <string name="settings_login">Login</string>
     <string name="settings_stats">User Stats</string>
     <string name="settings_shop_cart">Shopping Cart</string>
+
+    <string name="labelLoading">Loading ...</string>
 </resources>

@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +38,11 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private String upc;
     private String upcFormat;
+
+    private String exp = "2013-12-31";
+    private String image = "imagey-wimagey";
+    private String login = "laffLikeALlama";
+    private String pass = "k3jjf99sj2llj";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,17 +157,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         Toast.makeText(this, "Statistics", Toast.LENGTH_LONG).show();
     }
 
-    public void storeItem(String upc, String upcFormat)
-    {
-        //dbSubmitItem submit = new dbSubmitItem(upc);
-
+    public void storeItem(String upc, String upcFormat) {
+        //PhpWrapper db = new PhpWrapper(upc, exp, login, pass, image);
+        //db.submitItem();
     }
 
-    public void storeCoupon(String upc, String upcFormat)
-    {
-        dbSubmitCoupon db = new dbSubmitCoupon();
-        db.test(upc);
-        db.postCoupon();
+    public void storeCoupon(String upc, String upcFormat) {
+        Toast.makeText(this, "store coupon "+upc, Toast.LENGTH_LONG).show();
+        DbSubmitCoupon db = new DbSubmitCoupon(upc, exp, login, pass, image, this);
+        db.execute();
     }
 
     @Override
@@ -178,7 +182,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -235,7 +238,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         }
     }
 
-
     /**
      * A Fragment class that is used for scanning in Items
      */
@@ -275,7 +277,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             return v;
         }
     }
-
 
     /**
      * A fragment class that is used for scanning in coupons
