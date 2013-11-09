@@ -41,8 +41,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private String exp = "2013-12-31";
     private String image = "imagey-wimagey";
-    private String login = "laffLikeALlama";
-    private String pass = "k3jjf99sj2llj";
+    private String login = "user1";
+    private String pass = "pass1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,7 +164,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     public void storeCoupon(String upc, String upcFormat) {
         Toast.makeText(this, "store coupon "+upc, Toast.LENGTH_LONG).show();
-        DbSubmitCoupon db = new DbSubmitCoupon(upc, exp, login, pass, image, this);
+        DbSubmitCoupon db = new DbSubmitCoupon(login, pass, upc, exp, image);
         db.execute();
     }
 
