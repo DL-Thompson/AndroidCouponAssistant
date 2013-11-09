@@ -8,6 +8,13 @@ function post_coupon($post) {
         $exp_date = $post['exp_date'];
         $image_blob = $post['image_blob'];
         
+        //A coupon can have the same barcode, but it should not have the
+        //same barcode and expiration date. If it has both, it is a duplicate
+        //and the coupon isn't submitted.
+        if (coupon_exists($barcode, $exp_date)) {
+            response_error("Coupon already exists.");
+        }
+        
         //Get all the coupon variable assignments
         $barcode = split_barcode($barcode);
         $full_code = $barcode['full_code'];
@@ -94,6 +101,27 @@ function query_coupons($post) {
         }
         echo json_encode($response);
     }
+}
+
+function coupon_exists($barcode, $exp_date) {
+    global $db;
+    try {
+        $query = "SELECT * FROM coupon WHERE full_code = :full_code AND exp_date = :exp_date";
+        $query_params = array(
+            ':full_code' => $barcode,
+            ':exp_date' => $exp_date,
+        );
+        $stmt = $db->prepare($query);
+        $result = $stmt->execute($query_params);
+    } catch (PDOException $ex) {
+        response_error("Error querying coupons.");
+    }
+    $rows = $stmt->fetchAll();
+    if ($rows) {
+        //coupon exists
+        return true;
+    }
+    return false;
 }
 ?>
 
