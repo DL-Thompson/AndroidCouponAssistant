@@ -6,7 +6,5 @@
     <input type="password" name="password"><br>
     Barcode:<br>
     <input type="text" name="barcode"><br>
-    Description:<br>
-    <input type="text" name="description"><br>
     <input type="submit" value="Submit Item"/> 
 </form>

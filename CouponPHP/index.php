@@ -10,6 +10,8 @@
 <a href="http://dlthompson81.byethost24.com/CouponPHP/forms/get_item_form.php">Search Items</a>
 <br><br>
 <a href="http://dlthompson81.byethost24.com/CouponPHP/forms/submit_item_form.php">Submit Item</a>
+
 <?php
+    //Temporary php testing area.
     require_once './core/init.php';
-    ?>
+ ?>

@@ -10,5 +10,7 @@
     include_once 'functions/other_functions.php';
     include_once 'functions/relation_functions.php';
     include_once 'functions/user_functions.php';
+    
+    $upc_url = "http://www.upcdatabase.org/api/json/427764840ef7a9e41ca5a09e1dc415e1/";
 ?>
 

@@ -5,7 +5,7 @@ function post_item($post) {
     try {
         //Get variables from the submitted $_POST
         $barcode = $post['barcode'];
-        $description = $post['description'];
+        $description = get_upc_name($barcode);
 
         //Get all the coupon variable assignments
         $barcode = split_barcode($barcode);
@@ -34,13 +34,19 @@ function post_item($post) {
             return $item_id;
         }
     } catch (PDOException $ex) {
-        response_error("Inserting item failed.");
+        $error = $ex->getCode();
+        if ($error = 23000) {
+            response_error("Item already exists in database.");
+        }
+        response_error("Error inserting item into database. Error: " . $error);
         return false;
     }
     return false;
 }
 
 function query_items($post) {
+    //Get the list of matching items from a barcode
+    //Temporarily returns all items.
     global $db;
     $barcode = $post['barcode'];
     try {
