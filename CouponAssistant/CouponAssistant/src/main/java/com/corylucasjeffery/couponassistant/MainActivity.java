@@ -38,6 +38,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private String upc;
     private String upcFormat;
+    private String description;
 
     private String exp = "2013-12-31";
     private String image = "imagey-wimagey";
@@ -93,7 +94,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             Toast.makeText(this, toastShow, Toast.LENGTH_LONG).show();
 
             // here we need to find out if it is an item or coupon, by checking the fragment in view?
-            //storeItem(upc, upcFormat);
+            storeItem(upc, upcFormat);
             storeCoupon(upc, upcFormat);
         }
     }
@@ -160,6 +161,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     public void storeItem(String upc, String upcFormat) {
         //PhpWrapper db = new PhpWrapper(upc, exp, login, pass, image);
         //db.submitItem();
+        Toast.makeText(this, "store item "+upc, Toast.LENGTH_LONG).show();
+        DbSubmitItem db = new DbSubmitItem(login, pass, upc, description);
+        db.execute();
     }
 
     public void storeCoupon(String upc, String upcFormat) {
