@@ -31,13 +31,11 @@ public class DbSubmitItem extends AsyncTask<String, String, String>{
     private String username;
     private String password;
     private String barcode;
-    private String description;
 
-    public DbSubmitItem(String username, String password, String barcode, String description)  {
+    public DbSubmitItem(String username, String password, String barcode)  {
         this.username = username;
         this.password = password;
         this.barcode = barcode;
-        this.description = description;
     }
 
     @Override
@@ -49,7 +47,6 @@ public class DbSubmitItem extends AsyncTask<String, String, String>{
             parameters.add(new BasicNameValuePair("username", this.username));
             parameters.add(new BasicNameValuePair("password", this.password));
             parameters.add(new BasicNameValuePair("barcode", this.barcode));
-            parameters.add(new BasicNameValuePair("description", this.description));
 
             //Create the connection to the website
             HttpClient client = new DefaultHttpClient();

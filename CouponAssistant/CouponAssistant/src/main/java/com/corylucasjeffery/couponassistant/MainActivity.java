@@ -38,10 +38,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
     private String upc;
     private String upcFormat;
-    private String description;
 
     private String exp = "2013-12-31";
-    private String image = "imagey-wimagey";
+    private String image = "imagey-wimagey-timey-wimey";
     private String login = "user1";
     private String pass = "pass1";
 
@@ -162,7 +161,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         //PhpWrapper db = new PhpWrapper(upc, exp, login, pass, image);
         //db.submitItem();
         Toast.makeText(this, "store item "+upc, Toast.LENGTH_LONG).show();
-        DbSubmitItem db = new DbSubmitItem(login, pass, upc, description);
+        DbSubmitItem db = new DbSubmitItem(login, pass, upc);
         db.execute();
     }
 
