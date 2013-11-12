@@ -2,6 +2,8 @@ package com.corylucasjeffery.couponassistant;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class PhpWrapper {
 
     private final String TAG = "PHP";
@@ -32,9 +34,13 @@ public class PhpWrapper {
         }
     }
 
-    public void getCoupons(String itemUpc) {
-        //TODO implement getCoupons()
-        Log.v(TAG, "getCoupons() not implemented yet");
+    public ArrayList<Coupon> getCoupons(String itemUpc) {
+        ArrayList<Coupon> coupons = new ArrayList<Coupon>();
+        String fakeExp = "2013/12/31";
+        Coupon c = new Coupon(itemUpc, fakeExp);
+        coupons.add(c);
+        coupons.add(c);
+        return coupons;
     }
 
     public void getItems(String couponUPC) {

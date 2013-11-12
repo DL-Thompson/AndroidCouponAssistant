@@ -1,31 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item android:id="@+id/action_refresh"
-        android:orderInCategory="100"
-        android:title="@string/action_refresh"
-        android:icon="@drawable/ic_action_refresh"
-        app:showAsAction="always" />
-
-    <item android:id="@+id/action_search"
-        android:orderInCategory="100"
-        android:title="@string/action_search"
-        android:icon="@drawable/ic_action_search"
-        app:showAsAction="always" />
-
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_action_overflow"
-        app:showAsAction="always" >
-        <menu>
-            <item android:id="@+id/settings_login"
-                android:title="@string/settings_login" />
-            <item android:id="@+id/settings_stats"
-                android:title="@string/settings_stats" />
-            <item android:id="@+id/settings_shopping_cart"
-                android:title="@string/settings_shop_cart" />
-        </menu>
-    </item>
-
+    <item
+        android:id="@+id/menu_login"
+        android:title="@string/menu_login" />
+    <item
+        android:id="@+id/menu_stats"
+        android:title="@string/menu_stats" />
+    <item
+        android:id="@+id/menu_shopping_cart"
+        android:title="@string/menu_shop_cart" />
+    <item
+        android:id="@+id/menu_settings"
+        android:title="@string/menu_settings" />
 </menu>

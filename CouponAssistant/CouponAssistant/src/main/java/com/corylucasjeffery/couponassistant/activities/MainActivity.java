@@ -1,7 +1,7 @@
 package com.corylucasjeffery.couponassistant.activities;
 
 import android.app.DatePickerDialog;
-import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -21,7 +21,8 @@ import com.corylucasjeffery.couponassistant.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
+public class MainActivity extends FragmentActivity
+        implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private final String TAG = "MAIN";
 
@@ -29,6 +30,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private String upc = "";
 
     private int clicks = 0;
+
+    private Context context;
+
+    public static final String EXTRA_MESSAGE_UPC = "com.corylucasjeffery.couponassistant.activities.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Button scanButton = (Button) findViewById(R.id.scan_button);
 
         scanButton.setOnClickListener(this);
+
+        context = this;
     }
 
     @Override
@@ -51,10 +58,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        //super.onActivityResult(requestCode, resultCode, intent);
-
         //retrieve result of scanning - instantiate ZXing object
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        IntentResult scanningResult =
+                IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
         //check we have a valid result
         if (scanningResult != null) {
             upc = scanningResult.getContents();
@@ -62,9 +69,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             ParseUPC parser = new ParseUPC();
             int barcodeType = parser.determineBarcode(upc);
 
+            // check UPC and determine action
             if (barcodeType == ParseUPC.UPC_IS_ITEM)
             {
-                storeItem();
+                storeItemShowCoupons();
             }
             else
             {
@@ -85,22 +93,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
-            case R.id.action_search:
-                openSearch();
-                return true;
-            case R.id.action_settings:
+            case R.id.menu_settings:
                 openSettings();
                 return true;
-            case R.id.action_refresh:
-                openRefresh();
-                return true;
-            case R.id.settings_login:
+            case R.id.menu_login:
                 openLogin();
                 return true;
-            case R.id.settings_shopping_cart:
+            case R.id.menu_shopping_cart:
                 openCart();
                 return true;
-            case R.id.settings_stats:
+            case R.id.menu_stats:
                 openStats();
                 return true;
             default:
@@ -108,20 +110,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void openSearch() {
-        Toast.makeText(this, "Search", Toast.LENGTH_LONG).show();
-    }
-
     private void openSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
-    private void openRefresh() {
-        Toast.makeText(this, "Refresh", Toast.LENGTH_LONG).show();
-    }
-
     private void openLogin() {
+        /*
+        Intent intent = new Intent(this, LoginActivity.class);
+        Log.v(TAG, "starting login");
+        startActivity(intent);
+        */
         Toast.makeText(this, "Login", Toast.LENGTH_LONG).show();
     }
 
@@ -140,10 +139,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Toast.makeText(this, "Item submitted", Toast.LENGTH_LONG).show();
     }
 
+    public void storeItemShowCoupons() {
+        storeItem();
+
+        //open coupon activity
+        Intent intent = new Intent(context, ShowCouponsActivity.class);
+        String message = upc;
+        intent.putExtra(EXTRA_MESSAGE_UPC, message);
+        Log.v(TAG, "starting show coupons intent");
+        startActivity(intent);
+    }
+
     public void storeCoupon() {
         //popup, ask for exp-date
         DateChooserDialog dpd = new DateChooserDialog();
-        //DialogFragment fragment = dpd;
         Log.v(TAG, "after fragment");
         dpd.show(getFragmentManager(), "DatePicker");
         // when picker finishes, it calls submitCoupon
@@ -156,20 +165,18 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         Toast.makeText(this, "Coupon submitted", Toast.LENGTH_LONG).show();
     }
 
-    public void getCouponsFromItem() {
-        //TODO implement getCouponsFromItem()
-    }
-
     public void getItemsFromCoupon() {
         //TODO implement getItemsFromCoupon()
+
     }
 
     //override of DateChooserDialog method
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         if (clicks == 0) {
-            Log.v(TAG, "Pressed: "+Integer.toString(year)+ " " +Integer.toString(month) + " " + Integer.toString(day));
-            String date = Integer.toString(year) + "/" + Integer.toString(month) + "/" + Integer.toString(day);
+            String date =   Integer.toString(year) + "/" +
+                            Integer.toString(month+1) + "/" +
+                            Integer.toString(day);
             Log.v(TAG, "after listener: "+date);
             exp_date = date;
             submitCoupon();
@@ -178,6 +185,5 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         else  {
             clicks = 0;
         }
-
     }
 }

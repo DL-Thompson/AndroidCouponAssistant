@@ -4,8 +4,11 @@ package com.corylucasjeffery.couponassistant;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.DatePicker;
 
 import com.corylucasjeffery.couponassistant.activities.MainActivity;
@@ -20,26 +23,23 @@ public class DateChooserDialog extends DialogFragment {
     private final String TAG = "DATECHOOSER";
     private final int DEFAULT_MONTH = 12;
     private final int DEFAULT_DAY = 31;
-    private final String MYDATE_TITLE = "Pick expiration date";
+
+    public DateChooserDialog() {}
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
         this.year = c.get(Calendar.YEAR);
-        this.month = DEFAULT_MONTH;
+        this.month = DEFAULT_MONTH - 1; //for some reason, setting it to 12 moves it up to Jan?
         this.day = DEFAULT_DAY;
 
-        Log.v(TAG, "Set: "+Integer.toString(year)+ " " +Integer.toString(month) + " " + Integer.toString(day));
+        Log.v(TAG, "on create: "+Integer.toString(year)+ " "+Integer.toString(month)+" "+Integer.toString(day));
+
         // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(), (MainActivity)getActivity(), year, month, day);
+        DatePickerDialog dpd = new DatePickerDialog(getActivity(),
+                (MainActivity)getActivity(), year, month, day);
+        dpd.setTitle(R.string.date_chooser_title);
+        return dpd;
     }
-    /*
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        // Do something with the date chosen by the user
-        this.year = year;
-        this.month = month;
-        this.day = day;
-    }
-    */
 }

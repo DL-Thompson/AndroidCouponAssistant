@@ -31,12 +31,13 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.corylucasjeffery.couponassistant.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:name="com.corylucasjeffery.couponassistant.activities.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name="com.corylucasjeffery.couponassistant.StatsActivity"
-            android:label="@string/title_activity_stats" >
+            android:name=".activities.ShowCouponsActivity"
+            android:label="@string/title_activity_show_coupons" >
         </activity>
     </application>
 
