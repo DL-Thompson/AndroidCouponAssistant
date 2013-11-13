@@ -50,11 +50,19 @@ public class ShowCouponsActivity extends ListActivity {
 
     }
 
-
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // Do something when a list item is clicked
-        Toast.makeText(context, "clicked an item", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Loading Coupon to Cart", Toast.LENGTH_LONG).show();
+        Coupon selectedCoupon = (Coupon) l.getAdapter().getItem(position);
+        // TODO add coupon to shopping cart
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(context, MainActivity.class);
+        startActivity(intent);
+    }
 }

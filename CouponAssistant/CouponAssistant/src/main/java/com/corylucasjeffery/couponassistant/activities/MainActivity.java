@@ -3,17 +3,23 @@ package com.corylucasjeffery.couponassistant.activities;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.hardware.Camera;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.corylucasjeffery.couponassistant.CameraPreview;
 import com.corylucasjeffery.couponassistant.DateChooserDialog;
 import com.corylucasjeffery.couponassistant.ParseUPC;
 import com.corylucasjeffery.couponassistant.PhpWrapper;
@@ -25,26 +31,39 @@ public class MainActivity extends FragmentActivity
         implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private final String TAG = "MAIN";
-
+    private Camera mCamera;
+    private CameraPreview mPreview;
     private String exp_date = "";
     private String upc = "";
-
     private int clicks = 0;
-
     private Context context;
 
-    public static final String EXTRA_MESSAGE_UPC = "com.corylucasjeffery.couponassistant.activities.MESSAGE";
+    public static final String EXTRA_MESSAGE_UPC =
+            "com.corylucasjeffery.couponassistant.activities.MESSAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mCamera = getCameraInstance();
+        if (mCamera != null) {
+            mPreview = new CameraPreview(this, mCamera);
+            FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+            preview.addView(mPreview);
+        }
         Button scanButton = (Button) findViewById(R.id.scan_button);
 
         scanButton.setOnClickListener(this);
 
         context = this;
+    }
+
+    @Override
+    protected void onPause() {
+        Log.v(TAG, "On Pause");
+        super.onPause();
+        mCamera.release();
     }
 
     @Override
@@ -111,17 +130,14 @@ public class MainActivity extends FragmentActivity
     }
 
     private void openSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
+        Intent intent = new Intent(context, SettingsActivity.class);
         startActivity(intent);
     }
 
     private void openLogin() {
-        /*
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(context, LoginActivity.class);
         Log.v(TAG, "starting login");
         startActivity(intent);
-        */
-        Toast.makeText(this, "Login", Toast.LENGTH_LONG).show();
     }
 
     private void openCart() {
@@ -174,8 +190,8 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         if (clicks == 0) {
-            String date =   Integer.toString(year) + "/" +
-                            Integer.toString(month+1) + "/" +
+            String date =   Integer.toString(year) + "-" +
+                            Integer.toString(month+1) + "-" +
                             Integer.toString(day);
             Log.v(TAG, "after listener: "+date);
             exp_date = date;
@@ -185,5 +201,17 @@ public class MainActivity extends FragmentActivity
         else  {
             clicks = 0;
         }
+    }
+
+    /** A safe way to get an instance of the Camera object. */
+    public static Camera getCameraInstance(){
+        Camera c = null;
+        try {
+            c = Camera.open(); // attempt to get a Camera instance
+        }
+        catch (Exception e){
+            // Camera is not available (in use or does not exist)
+        }
+        return c; // returns null if camera is unavailable
     }
 }

@@ -2,17 +2,42 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/scan_button"
+    <FrameLayout
+        android:id="@+id/camera_preview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+
+    <LinearLayout
+        android:id="@+id/footer_container"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+        <include layout="@layout/footer"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/button_scan"
-        android:textSize="40dp"
-        android:padding = "30dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@android:color/transparent"
-        android:clickable="true"/>
+        android:layout_above="@id/footer_container">
+        <Button
+            android:id="@+id/scan_button"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/button_scan"
+            android:textColor="@android:color/white"
+            android:shadowColor="@android:color/black"
+            android:shadowRadius="2.0"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:textSize="40sp"
+            android:padding = "30dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@android:color/transparent"
+            android:clickable="true"/>
+    </LinearLayout>
+
+
+
 
 </RelativeLayout>
