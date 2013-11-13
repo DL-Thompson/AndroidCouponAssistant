@@ -47,7 +47,49 @@ function purchase($post, $user_id, $item_id) {
         response_error("Inserting coupon failed.");
         return false;
     }
-    return true;
+    return true;   
+}
+
+function get_user_coupon_count($user_id) {
+    //Get the number of coupons submitted by a user
+    global $db;
+    try {
+        //Prepare the query
+        $query = "SELECT COUNT(*) as coupon_count FROM submitted WHERE user_id = :user_id";
+        $query_params = array(
+            ':user_id' => $user_id
+        );
+        
+        //Execute the query
+        $stmt = $db->prepare($query);
+        $stmt->execute($query_params); 
+        $result = (int) $stmt->fetch(PDO::FETCH_OBJ)->coupon_count;
+    } catch (PDOException $ex) {
+        response_error("Getting user submitted coupon count failed.");
+        return false;
+    }
+    return $result;
+}
+
+function get_user_coupon_count_by_day($user_id, $num_days) {
+    //Query the number of coupons a user has submitted by number of days.
+    global $db;
+    try {
+        //prepare the query
+        $query = "SELECT COUNT(*) as coupon_count FROM submitted WHERE date > NOW() - INTERVAL :num_days DAY AND user_id = :user_id";
+        $query_params = array(
+            ':num_days' => $num_days,
+            ':user_id' => $user_id
+        );
+        
+        //Execute the query
+        $stmt = $db->prepare($query);
+        $stmt->execute($query_params);
+        $result = (int) $stmt->fetch(PDO::FETCH_OBJ)->coupon_count;
+    } catch (PDOException $ex) {
+        response_error("User coupon count by " . $num_days . " failed.");
+    }
+    return $result;
     
 }
 ?>

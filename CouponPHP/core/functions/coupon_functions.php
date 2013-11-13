@@ -79,8 +79,9 @@ function get_coupon_id($barcode) {
 function query_coupons($post) {
     global $db;
     $barcode = $post['barcode'];
+    $manuf_code = get_manuf_code($barcode);
     try {
-        $query = "SELECT * FROM coupon";
+        $query = "SELECT * FROM coupon WHERE full_code LIKE '_" . $manuf_code . "_%'";
         $query_params = array();
         $stmt = $db->prepare($query);
         $result = $stmt->execute($query_params);
@@ -122,6 +123,11 @@ function coupon_exists($barcode, $exp_date) {
         return true;
     }
     return false;
+}
+
+function get_manuf_code($barcode) {
+    $manuf_code = substr($barcode, 1, 5);
+    return $manuf_code;
 }
 ?>
 

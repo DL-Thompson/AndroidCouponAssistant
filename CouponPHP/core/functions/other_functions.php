@@ -72,5 +72,19 @@ function get_upc_name($barcode) {
         return "Unknown";
     }
 }
+
+function check_digit($barcode) {
+    $odd_sum = intval($barcode[0]) + intval($barcode[2]) + intval($barcode[4]) + intval($barcode[6]) + intval($barcode[8]) + intval($barcode[10]);
+    $odd_pos = $odd_sum * 3;
+    $even_sum = intval($barcode[1]) + intval($barcode[3]) + intval($barcode[5]) + intval($barcode[7]) + intval($barcode[9]);
+    $total = $odd_pos + $even_sum;
+    $digit = 10 - ($total % 10);
+    return $digit;
+}
+
+function query_db($query, $query_params) {
+    global $db;
+    
+}
 ?>
 
