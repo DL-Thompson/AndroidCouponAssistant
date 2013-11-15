@@ -92,5 +92,72 @@ function get_user_coupon_count_by_day($user_id, $num_days) {
     return $result;
     
 }
+
+function get_user_coupon_submitted_by_day($user_id, $num_days) {
+    //Get a list of coupons the user has submitted in the past number of days
+    global $db;
+        try {
+        //prepare the query
+        $query = "SELECT full_code, exp_date, image_blob, date FROM submitted, coupon WHERE date > NOW() - INTERVAL :num_days DAY AND user_id = :user_id AND coupon_id = id";
+        $query_params = array(
+            ':num_days' => $num_days,
+            ':user_id' => $user_id
+        );
+        
+        //Execute the query
+        $stmt = $db->prepare($query);
+        $stmt->execute($query_params);
+    } catch (PDOException $ex) {
+        response_error("User coupon count by " . $num_days . " failed.");
+    }
+    $rows = $stmt->fetchAll();
+    if ($rows) {
+        $coupon_list = array();
+        foreach ($rows as $row) {
+            $coupon = array();
+            $coupon['full_code'] = $row['full_code'];
+            $coupon['exp_date'] = $row['exp_date'];
+            $coupon['image_blob'] = $row['image_blob'];
+            $coupon['date'] = $row['date'];
+            array_push($coupon_list, $coupon);
+        }
+        return $coupon_list;
+    }
+    return "No coupons founds";
+    
+}
+
+function get_user_coupon_submitted($user_id) {
+    //Get a list of coupons the user has submitted in the past number of days
+    global $db;
+        try {
+        //prepare the query
+        $query = "SELECT full_code, exp_date, image_blob, date FROM submitted, coupon WHERE  user_id = :user_id AND coupon_id = id";
+        $query_params = array(
+            ':user_id' => $user_id
+        );
+        
+        //Execute the query
+        $stmt = $db->prepare($query);
+        $stmt->execute($query_params);
+    } catch (PDOException $ex) {
+        response_error("User coupon count by " . $num_days . " failed.");
+    }
+    $rows = $stmt->fetchAll();
+    if ($rows) {
+        $coupon_list = array();
+        foreach ($rows as $row) {
+            $coupon = array();
+            $coupon['full_code'] = $row['full_code'];
+            $coupon['exp_date'] = $row['exp_date'];
+            $coupon['image_blob'] = $row['image_blob'];
+            $coupon['date'] = $row['date'];
+            array_push($coupon_list, $coupon);
+        }
+        return $coupon_list;
+    }
+    return "No coupons founds";
+    
+}
 ?>
 
