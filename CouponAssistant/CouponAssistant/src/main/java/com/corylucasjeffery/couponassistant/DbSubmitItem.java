@@ -25,7 +25,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbSubmitItem extends AsyncTask<String, String, String>{
+public class DbSubmitItem extends AsyncTask<String, String, Boolean>{
 
     private String POST_COUPON_URL = "http://dlthompson81.byethost24.com/CouponPHP/form_code/submit_item.php";
     private String username;
@@ -39,8 +39,8 @@ public class DbSubmitItem extends AsyncTask<String, String, String>{
     }
 
     @Override
-    protected String doInBackground(String... params) {
-
+    protected Boolean doInBackground(String... params) {
+        int success = 0;
         try {
             //Prepare the post values
             List<NameValuePair> parameters = new ArrayList<NameValuePair>();
@@ -70,7 +70,7 @@ public class DbSubmitItem extends AsyncTask<String, String, String>{
 
             //Grab data from JSON string
             JSONObject jObject = new JSONObject(result);
-            String success = jObject.getString("success");
+            success = jObject.getInt("success");
             String jmessage = jObject.getString("message");
             Log.d("DbSubmitItem", "Success: " + success + " Message: " + jmessage);
 
@@ -79,6 +79,6 @@ public class DbSubmitItem extends AsyncTask<String, String, String>{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return success == PhpWrapper.SUCCESS_VALUE;
     }
 }

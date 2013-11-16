@@ -56,7 +56,7 @@ public class LoginActivity extends Activity {
                 {
                     PhpWrapper db = new PhpWrapper();
                     boolean LoginSuccess = db.submitLogin(
-                                            userText, pwText, firstText, lastText, activity);
+                                            userText, pwText, firstText, lastText);
 
                     if (LoginSuccess) {
                         Toast.makeText(context, "Logging in", Toast.LENGTH_LONG).show();

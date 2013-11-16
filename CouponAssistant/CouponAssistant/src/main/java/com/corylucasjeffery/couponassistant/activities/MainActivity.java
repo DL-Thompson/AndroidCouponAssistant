@@ -1,9 +1,9 @@
 package com.corylucasjeffery.couponassistant.activities;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.hardware.Camera;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -11,21 +11,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.corylucasjeffery.couponassistant.CameraPreview;
 import com.corylucasjeffery.couponassistant.DateChooserDialog;
+import com.corylucasjeffery.couponassistant.ManualEntryDialog;
 import com.corylucasjeffery.couponassistant.ParseUPC;
 import com.corylucasjeffery.couponassistant.PhpWrapper;
 import com.corylucasjeffery.couponassistant.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import java.io.IOException;
 
 
 
@@ -45,10 +47,11 @@ public class MainActivity extends FragmentActivity
         implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private final String TAG = "MAIN";
-    private Camera mCamera;
-    private CameraPreview mPreview;
+    private Camera mCamera = null;
+    private CameraPreview mPreview = null;
     private String exp_date = "";
     private String upc = "";
+    private String imageBlob = "no-image-data-found";
     private int clicks = 0;
     private Context context;
     public static final String PREFS_CART = "CouponShoppingCart";
@@ -62,28 +65,25 @@ public class MainActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
 
-        mCamera = getCameraInstance();
-        if (mCamera != null) {
-            mPreview = new CameraPreview(this, mCamera);
+        // get camera preview
+        if (mCamera == null)
+        {
+            mCamera = getCameraInstance();
+            if(mCamera != null)
+                mPreview = new CameraPreview(this, mCamera);
+        }
+        if (mPreview != null) {
             FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
             preview.addView(mPreview);
         }
 
-        Button scanButton = (Button) findViewById(R.id.scan_button);
-        scanButton.setOnClickListener(this);
-
-        //View footerView = findViewById(R.id.footer_layout);
-        //View footer_xml = main_xml.findViewById(R.id.footer_main);
-        //Button cartButton = (Button) footerView.findViewById(R.id.footer_shopping_cart);
-        //cartButton.setOnClickListener(this);
-
-        context = this;
+        initializeClickyThings();
     }
 
     @Override
     protected void onPause() {
-        Log.v(TAG, "On Pause");
         super.onPause();
         mCamera.release();
     }
@@ -99,9 +99,24 @@ public class MainActivity extends FragmentActivity
         else if (v.getId()==R.id.footer_shopping_cart) {
             openCart();
         }
+        else if (v.getId()==R.id.footer_manual_add) {
+            openManualEntry();
+        }
+    }
+
+    public void initializeClickyThings() {
+        Button scanButton = (Button) findViewById(R.id.scan_button);
+        scanButton.setOnClickListener(this);
+
+        ImageView cartImage = (ImageView) findViewById(R.id.footer_shopping_cart);
+        cartImage.setOnClickListener(this);
+
+        ImageView plusImage = (ImageView) findViewById(R.id.footer_manual_add);
+        plusImage.setOnClickListener(this);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        upc = "";
         //retrieve result of scanning - instantiate ZXing object
         IntentResult scanningResult =
                 IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -109,19 +124,22 @@ public class MainActivity extends FragmentActivity
         //check we have a valid result
         if (scanningResult != null) {
             upc = scanningResult.getContents();
-
-            ParseUPC parser = new ParseUPC();
-            int barcodeType = parser.determineBarcode(upc);
-
-            // check UPC and determine action
-            if (barcodeType == ParseUPC.UPC_IS_ITEM)
+            if (upc != "")
             {
-                storeItemShowCoupons();
+                ParseUPC parser = new ParseUPC();
+                int barcodeType = parser.determineBarcode(upc);
+                // check UPC and determine action
+                if (barcodeType == ParseUPC.UPC_IS_ITEM)
+                {
+                    storeItemShowCoupons();
+                }
+                else
+                {
+                    storeCoupon();
+                }
             }
             else
-            {
-                storeCoupon();
-            }
+                Toast.makeText(this, "Scan failed, retry", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -161,13 +179,11 @@ public class MainActivity extends FragmentActivity
 
     private void openLogin() {
         Intent intent = new Intent(context, LoginActivity.class);
-        Log.v(TAG, "starting login");
         startActivity(intent);
     }
 
     private void openCart() {
         Intent intent = new Intent(context, CheckoutActivity.class);
-        Log.v(TAG, "starting checkout");
         startActivity(intent);
     }
 
@@ -175,11 +191,18 @@ public class MainActivity extends FragmentActivity
         Toast.makeText(this, "Statistics", Toast.LENGTH_LONG).show();
     }
 
+    private void openManualEntry() {
+        ManualEntryDialog dialog = new ManualEntryDialog();
+        dialog.show(getFragmentManager(), "manualEntry");
+    }
+
     public void storeItem() {
         PhpWrapper db = new PhpWrapper();
-        //db.disconnect();
-        db.submitItem(upc);
-        Toast.makeText(this, "Item submitted", Toast.LENGTH_LONG).show();
+        boolean success = db.submitItem(upc);
+        if (success)
+            Toast.makeText(this, "Item submitted", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Item failed to submit", Toast.LENGTH_LONG).show();
     }
 
     public void storeItemShowCoupons() {
@@ -191,23 +214,24 @@ public class MainActivity extends FragmentActivity
         intent.putExtra(EXTRA_MESSAGE_UPC, message);
         String file = "";
         intent.putExtra(EXTRA_MESSAGE_FILE_NAME, file);
-        Log.v(TAG, "starting show coupons intent");
         startActivity(intent);
     }
 
     public void storeCoupon() {
         //popup, ask for exp-date
         DateChooserDialog dpd = new DateChooserDialog();
-        Log.v(TAG, "after fragment");
         dpd.show(getFragmentManager(), "DatePicker");
         // when picker finishes, it calls submitCoupon
     }
 
     public void submitCoupon() {
         PhpWrapper db = new PhpWrapper();
-        //db.disconnect();
-        db.submitCoupon(upc, exp_date, null);
-        Toast.makeText(this, "Coupon submitted", Toast.LENGTH_LONG).show();
+        Log.v(TAG, "upc in submit:"+upc);
+        boolean success = db.submitCoupon(upc, exp_date, imageBlob);
+        if (success)
+            Toast.makeText(this, "Coupon submitted", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Error, coupon not submitted", Toast.LENGTH_LONG).show();
     }
 
     public void getItemsFromCoupon() {
@@ -222,7 +246,6 @@ public class MainActivity extends FragmentActivity
             String date =   Integer.toString(year) + "-" +
                             Integer.toString(month+1) + "-" +
                             Integer.toString(day);
-            Log.v(TAG, "after listener: "+date);
             exp_date = date;
             submitCoupon();
             clicks++;

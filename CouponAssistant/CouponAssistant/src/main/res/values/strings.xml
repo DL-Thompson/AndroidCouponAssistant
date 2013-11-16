@@ -23,5 +23,9 @@
     <string name="title_activity_checkout">Checkout Activity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dialog_title_manually_add">Manually add a coupon</string>
+    <string name="dialog_ok_button">OK</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_hint_upc">Manual not implemented yet</string>
 
 </resources>

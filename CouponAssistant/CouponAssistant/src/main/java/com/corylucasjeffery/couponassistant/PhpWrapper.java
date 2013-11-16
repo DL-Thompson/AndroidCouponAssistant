@@ -8,6 +8,8 @@ import java.util.concurrent.ExecutionException;
 
 public class PhpWrapper {
 
+    public static final int SUCCESS_VALUE = 1;
+
     private final String TAG = "PHP";
     boolean connected;
     UserInfo user;
@@ -21,20 +23,38 @@ public class PhpWrapper {
     public void disconnect() { connected = false; }
     public void connect() { connected = true; }
 
-    public void submitItem(String upc) {
+    public Boolean submitItem(String upc) {
+        boolean result = false;
         if(connected) {
             DbSubmitItem submitItem = new DbSubmitItem(user.getUserName(), user.getPass(), upc);
-            submitItem.execute();
+
+            try {
+                result = submitItem.execute().get();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            } catch (ExecutionException ee) {
+                ee.printStackTrace();
+            }
         }
+
+        return result;
     }
 
-    public void submitCoupon(String upc, String exp_date, String image) {
-        if(connected) {
-            if (image == null)
-                image = "image-file-not-found";
+    public Boolean submitCoupon(String upc, String exp_date, String image) {
+        boolean result = false;
+
+        if (connected) {
             DbSubmitCoupon submitCoupon = new DbSubmitCoupon(user.getUserName(), user.getPass(), upc, exp_date, image);
-            submitCoupon.execute();
+
+            try {
+                result = submitCoupon.execute().get();
+            } catch (InterruptedException ie) {
+                Log.v(TAG, "Interrupted Exception");
+            } catch (ExecutionException ee) {
+                Log.v(TAG, "Execution Exception");
+            }
         }
+        return result;
     }
 
     public ArrayList<Coupon> getCoupons(String itemUpc) {
@@ -56,8 +76,8 @@ public class PhpWrapper {
         Log.v(TAG, "getItems() not implemented yet");
     }
 
-    public boolean submitLogin(String user, String pass, String first, String last, Activity activity) {
-        DbUserRegister dbUser = new DbUserRegister(user, pass, first, last, activity);
+    public boolean submitLogin(String user, String pass, String first, String last) {
+        DbUserRegister dbUser = new DbUserRegister(user, pass, first, last);
         boolean result = false;
         try {
             result = dbUser.execute().get();

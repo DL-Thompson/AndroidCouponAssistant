@@ -12,7 +12,7 @@
         android:ems="10"
         android:text=""
         android:id="@+id/field_firstName"
-        android:hint="Enter first name"
+        android:hint="@string/editFirstName"
         android:padding="15dp" />
 
     <EditText
@@ -22,7 +22,7 @@
         android:ems="10"
         android:text=""
         android:id="@+id/field_lastName"
-        android:hint="Enter last name"
+        android:hint="@string/editLastName"
         android:padding="15dp" />
 
     <EditText
@@ -43,6 +43,7 @@
         android:text=""
         android:id="@+id/field_password"
         android:hint="@string/editPassBox"
+        android:fontFamily="sans-serif"
         android:padding="15dp"/>
 
     <Button

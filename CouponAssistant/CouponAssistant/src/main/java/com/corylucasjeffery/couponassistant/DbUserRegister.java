@@ -35,17 +35,11 @@ public class DbUserRegister extends AsyncTask<String, String, Boolean> {
     private String firstName;
     private String lastName;
 
-    private Intent currentIntent;
-    private Activity parent;
-
-    public DbUserRegister(String user, String pass, String first, String last, Activity activity) {
+    public DbUserRegister(String user, String pass, String first, String last) {
         this.username = user;
         this.password = pass;
         this.firstName = first;
         this.lastName = last;
-
-        parent = activity;
-        currentIntent = activity.getIntent();
     }
 
     @Override
@@ -91,15 +85,7 @@ public class DbUserRegister extends AsyncTask<String, String, Boolean> {
             e.printStackTrace();
         }
         // {"success":0,"message":"One of the submitted coupon fields was empty."}
-        return success == SUCCESS_VALUE;
-    }
-
-    public Boolean onPostExecute(boolean result) {
-        /*
-        currentIntent.putExtra("Success", result);
-        parent.setResult(Activity.RESULT_OK, currentIntent);
-        */
-        return result;
+        return success == PhpWrapper.SUCCESS_VALUE;
     }
 
 }
