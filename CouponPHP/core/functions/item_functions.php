@@ -1,11 +1,14 @@
 <?php
-function post_item($post) {
+function post_item($barcode) {
     //Post a single item and return the items id.
     global $db;
     try {
         //Get variables from the submitted $_POST
-        $barcode = $post['barcode'];
+        //$barcode = $post['barcode'];
         $description = get_upc_name($barcode);
+        if (empty($barcode)) {
+            response_error("Barcode was empty.");
+        }
 
         //Get all the coupon variable assignments
         $barcode = split_barcode($barcode);
@@ -15,14 +18,9 @@ function post_item($post) {
         $check_digit = $barcode['check_digit'];
         
         //Prepare the query
-        $query = "INSERT INTO item (full_code, manuf_code, product_code, check_digit, "
-                . "description ) VALUES (:full_code, :manuf_code, :product_code, :check_digit, "
-                . ":description)";
+        $query = "INSERT INTO item (full_code, description ) VALUES (:full_code, :description)";
         $query_params = array(
             ':full_code' => $full_code,
-            ':manuf_code' => $manuf_code,
-            ':product_code' => $product_code,
-            ':check_digit' => $check_digit,
             ':description' => $description
         );
         
@@ -38,19 +36,19 @@ function post_item($post) {
         if ($error = 23000) {
             response_error("Item already exists in database.");
         }
-        response_error("Error inserting item into database. Error: " . $error);
-        return false;
+        response_error("Error inserting item into database.");
     }
     return false;
 }
 
-function query_items($post) {
+function query_items($barcode) {
     //Get the list of matching items from a barcode
     //Temporarily returns all items.
     global $db;
-    $barcode = $post['barcode'];
+    //$barcode = $post['barcode'];
     try {
-        $query = "SELECT * FROM item";
+        $query = build_item_query($barcode);
+        $query_params = array();
         $stmt = $db->prepare($query);
         $result = $stmt->execute($query_params);
     } catch (PDOException $ex) {
@@ -69,5 +67,57 @@ function query_items($post) {
         }
         echo json_encode($response);
     }
+}
+
+function build_item_query($barcode) {
+    //Builds the query string to find a list of items that match a coupon
+    $query = "SELECT * FROM item WHERE full_code REGEXP ";
+    $manuf_code = substr($barcode, 1, 5);
+    //. "'[0-9]170001[0-9]{5}'";
+    $regexp = "'[0-9]" . $manuf_code;
+    if ($barcode[6] === "0") {
+        $regexp = $regexp . "[0-9]";
+    }
+    else {
+        $regexp = $regexp . $barcode[6];
+    }
+    if ($barcode[7] === "0") {
+        $regexp = $regexp . "[0-9]";
+    }
+    else {
+        $regexp = $regexp . $barcode[7];
+    }
+    if ($barcode[8] === "0") {
+        $regexp = $regexp . "[0-9]";
+    }
+    else {
+        $regexp = $regexp . $barcode[8];
+    }
+    $regexp = $regexp . "[0-9]{3}'";
+    $query = $query . $regexp;
+    return $query;
+}
+
+function item_exists($barcode) {
+    global $db;
+    try {
+        $query = "SELECT id FROM item WHERE full_code = :full_code";
+        $query_params = array(
+            ':full_code' => $barcode,
+        );
+        $stmt = $db->prepare($query);
+        $result = $stmt->execute($query_params);
+    } catch (PDOException $ex) {
+        response_error("Error finding item.");
+    }
+    $rows = $stmt->fetchAll();
+    if ($rows) {
+        //coupon exists
+        foreach ($rows as $row) {
+            $id = $row['id'];
+            return $id;
+        }
+    }
+    return false;
 }
 ?>

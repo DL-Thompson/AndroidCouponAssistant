@@ -14,6 +14,18 @@ function response_error($message) {
         die(json_encode($response));
     }
     
+function response_success($message) {
+    //JSON success response with a message
+    $response['success'] = 1;
+    if (is_string($message)) {
+        $response['message'] = $message;
+    }
+    else {
+        $response['message'] = "Uknown message.";
+    }
+    echo json_encode($response);
+}
+    
     function split_barcode($barcode) {
     //Takes a full barcode and splits it into seperated values
     //that will be stored in the database. Returns an array with

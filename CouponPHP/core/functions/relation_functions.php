@@ -1,5 +1,5 @@
 <?php
-function submit($post, $user_id, $coupon_id) {
+function submit($user_id, $coupon_id) {
     //Places the user and coupon into the submitted table.
     //Returns a true or false value
     global $db;
@@ -16,18 +16,17 @@ function submit($post, $user_id, $coupon_id) {
         $result = $stmt->execute($query_params);     
     } catch (PDOException $ex) {
         response_error("Inserting coupon failed.");
-        return false;
     }
     return true;
     
 }
 
-function purchase($post, $user_id, $item_id) {
+function purchase($user_id, $item_id, $coupon_id) {
     //Places the user,item, and coupon into the bought table.
     //Returns a true or false value
     global $db;
-    $coupon_id = $post['coupon_barcode'];
-    $coupon_id = get_coupon_id($coupon_id);
+    //$coupon_id = $post['coupon_barcode'];
+    //$coupon_id = get_coupon_id($coupon_barcode);
     if ($coupon_id === false) {
         return false;
     }
@@ -44,7 +43,7 @@ function purchase($post, $user_id, $item_id) {
         $stmt = $db->prepare($query);
         $result = $stmt->execute($query_params);   
     } catch (PDOException $ex) {
-        response_error("Inserting coupon failed.");
+        response_error("Purchase insert failed.");
         return false;
     }
     return true;   
@@ -158,6 +157,26 @@ function get_user_coupon_submitted($user_id) {
     }
     return "No coupons founds";
     
+}
+
+function get_items_bought_count($user_id) {
+    //Gets the count of items a user has bought
+    global $db;
+    try {
+        //prepare the query
+        $query = "SELECT COUNT(*) AS bought_count FROM bought WHERE user_id = :user_id";
+        $query_params = array(
+            ':user_id' => $user_id
+        );
+        
+        //Execute the query
+        $stmt = $db->prepare($query);
+        $stmt->execute($query_params);
+        $result = (int) $stmt->fetch(PDO::FETCH_OBJ)->bought_count;
+    } catch (PDOException $ex) {
+        response_error("Bought count failed.");
+    }    
+    return $result;
 }
 ?>
 

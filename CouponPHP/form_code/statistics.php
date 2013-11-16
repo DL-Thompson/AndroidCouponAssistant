@@ -2,8 +2,17 @@
 
 require_once '../core/init.php';
 
-$user_id = login($_POST);
+//Check for correct input
+$username = $_POST['username'];
+$password = $_POST['password'];
+if (empty($username)) {
+    response_error("Username field left blank.");
+}
+elseif (empty($password)) {
+    response_error("Password field left blank.");
+}
 
+$user_id = login($username, $password);
 if ($user_id !== false) {
     //If login was successful, get the user statstics.
     
@@ -21,9 +30,13 @@ if ($user_id !== false) {
     $coupon_list_month = get_user_coupon_submitted_by_day($user_id, 30);
     $coupon_list_year = get_user_coupon_submitted_by_day($user_id, 365);
     
+    //Get count of items bought and coupons used
+    $item_bought_count = get_items_bought_count($user_id);
+    
     //Encode statistics into JSON
     $response["success"] = 1;
     $response["message"] = "Statistics found!";
+    $response["count_bought"] = $item_bought_count;
     $response["count_total"] = $coupon_post_count;
     $response["count_day"] = $coupon_post_count_day;
     $response["count_week"] = $coupon_post_count_week;
@@ -33,11 +46,11 @@ if ($user_id !== false) {
     //Encode coupon lists into JSON
     //Will post a JSON array if coupons are found.
     //If no coupons are found, a String is returned with a fail message.
-    $response["coupon_total"] = $coupon_list_all;
-    $response["coupon_day"] = $coupon_list_day;
-    $response["coupon_week"] = $coupon_list_week;
-    $reponse["coupon_month"] = $coupon_list_month;
-    $response["coupon_year"] = $coupon_list_year;
+    //$response["coupon_total"] = $coupon_list_all;
+    //$response["coupon_day"] = $coupon_list_day;
+    //$response["coupon_week"] = $coupon_list_week;
+    //$reponse["coupon_month"] = $coupon_list_month;
+    //$response["coupon_year"] = $coupon_list_year;
     
     echo json_encode($response);
             
