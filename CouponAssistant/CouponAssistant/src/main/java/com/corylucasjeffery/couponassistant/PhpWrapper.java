@@ -1,6 +1,7 @@
 package com.corylucasjeffery.couponassistant;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -26,10 +27,10 @@ public class PhpWrapper {
     public Boolean submitItem(String upc) {
         boolean result = false;
         if(connected) {
-            DbSubmitItem submitItem = new DbSubmitItem(user.getUserName(), user.getPass(), upc);
+            DbSubmitItem db = new DbSubmitItem(user.getUserName(), user.getPass(), upc);
 
             try {
-                result = submitItem.execute().get();
+                result = db.execute().get();
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             } catch (ExecutionException ee) {
@@ -44,10 +45,10 @@ public class PhpWrapper {
         boolean result = false;
 
         if (connected) {
-            DbSubmitCoupon submitCoupon = new DbSubmitCoupon(user.getUserName(), user.getPass(), upc, exp_date, image);
+            DbSubmitCoupon db = new DbSubmitCoupon(user.getUserName(), user.getPass(), upc, exp_date, image);
 
             try {
-                result = submitCoupon.execute().get();
+                result = db.execute().get();
             } catch (InterruptedException ie) {
                 Log.v(TAG, "Interrupted Exception");
             } catch (ExecutionException ee) {
@@ -57,18 +58,28 @@ public class PhpWrapper {
         return result;
     }
 
-    public ArrayList<Coupon> getCoupons(String itemUpc) {
+    public ArrayList<Coupon> getCoupons(String itemUpc, ListActivity activity) {
+        ArrayList<Coupon> coupons = new ArrayList<Coupon>();
         if (connected) {
+            DbGetCoupons db = new DbGetCoupons(user.getUserName(), user.getPass(), itemUpc, activity);
+            try {
+                Log.v(TAG, "execute getCoupons");
+                coupons = db.execute().get();
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            } catch (ExecutionException ee) {
+                ee.printStackTrace();
+            }
+        }
+        else {
+            String fakeExp = "2013-12-31";
+            String fakeDescription = "db is disconnected";
+            Coupon c = new Coupon(itemUpc, fakeExp, fakeDescription);
+            coupons.add(c);
+            coupons.add(c);
         }
 
-
-        ArrayList<Coupon> coupons = new ArrayList<Coupon>();
-        String fakeExp = "2013/12/31";
-        Coupon c = new Coupon(itemUpc, fakeExp);
-        coupons.add(c);
-        coupons.add(c);
         return coupons;
-
     }
 
     public void getItems(String couponUPC) {
@@ -77,10 +88,10 @@ public class PhpWrapper {
     }
 
     public boolean submitLogin(String user, String pass, String first, String last) {
-        DbUserRegister dbUser = new DbUserRegister(user, pass, first, last);
+        DbUserRegister db = new DbUserRegister(user, pass, first, last);
         boolean result = false;
         try {
-            result = dbUser.execute().get();
+            result = db.execute().get();
         } catch (InterruptedException ie) {
             Log.v(TAG, "Interrupted Exception");
         } catch (ExecutionException ee) {

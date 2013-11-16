@@ -9,11 +9,11 @@ public class Coupon {
     private String discount;
     private String limitations;
 
-    public Coupon(String upc, String exp_date) {
+    public Coupon(String upc, String exp_date, String description) {
         this.upc = upc;
         this.exp_date = exp_date;
         this.discount = "10%";
-        this.limitations = "";
+        this.limitations = description;
     }
 
     public String getUpc() { return upc; }

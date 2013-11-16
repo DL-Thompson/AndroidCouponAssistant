@@ -46,9 +46,8 @@ public class ShowCouponsActivity extends ListActivity {
         imageFileName = intent.getStringExtra(MainActivity.EXTRA_MESSAGE_FILE_NAME);
 
         PhpWrapper db = new PhpWrapper();
-
         //setup the list display
-        ArrayList<Coupon> coupons = db.getCoupons(upc);
+        ArrayList<Coupon> coupons = db.getCoupons(upc, this);
         CouponAdapter adapter = new CouponAdapter(this, R.layout.list_coupon, coupons);
         setListAdapter(adapter);
 
