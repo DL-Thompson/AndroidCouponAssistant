@@ -1,69 +1,29 @@
 <?php
+
 function response_error($message) {
     //kills the php script with the passed error message
-    //for testing purposes. Error messages should be limited
-    //when the code is finished to limit information to any
-    //malicious users
-        $response['success'] = 0;
-        if (is_string($message)) {
-            $response['message'] = $message;
-        }
-        else {
-            $response['message'] = "Uknown Error.";
-        }
-        die(json_encode($response));
+    $response['success'] = 0;
+    if (is_string($message)) {
+        $response['message'] = $message;
+    } else {
+        $response['message'] = "Uknown Error.";
     }
-    
+    die(json_encode($response));
+}
+
 function response_success($message) {
     //JSON success response with a message
     $response['success'] = 1;
     if (is_string($message)) {
         $response['message'] = $message;
-    }
-    else {
+    } else {
         $response['message'] = "Uknown message.";
     }
-    echo json_encode($response);
-}
-    
-    function split_barcode($barcode) {
-    //Takes a full barcode and splits it into seperated values
-    //that will be stored in the database. Returns an array with
-    //each database id equal to the value.
-    $full_code = $barcode;
-    $prefix = substr($barcode, 0, 1);
-    $manuf_code = substr($barcode, 1, 5);
-    $family_code = substr($barcode, 6, 3);
-    $value_code = substr($barcode, 9, 2);
-    $check_digit = substr($barcode, -1);
-    $product_code = substr($barcode, 6, 5);
-
-    $barcode = array(
-        'full_code' => $full_code,
-        'prefix' => $prefix,
-        'manuf_code' => $manuf_code,
-        'family_code' => $family_code,
-        'value_code' => $value_code,
-        'check_digit' => $check_digit,
-        'product_code' => $product_code
-    );
-    //check digit needs to be calculated
-    return $barcode;
-}
-
-function json_post($success, $message) {
-    //Echo a success message via JSON for the android device to read
-    if (is_int($success) && is_string($message)) {
-        $response["success"] = $success;
-        $response["message"] = $message;
-        echo json_encode($response);
-    } else {
-        response_error("Invalid json_post variable types.");
-    }
+    die(json_encode($response));
 }
 
 function get_upc_name($barcode) {
-    //Returns the item name.
+    //RQueries an outside UPC code database to get the name of a scanned item
     //Sometimes the name is in either the name or desc field, so both are checked
     global $upc_url;
     $url = $upc_url . $barcode;
@@ -76,27 +36,11 @@ function get_upc_name($barcode) {
     $description = $upc_array['description'];
     if (!empty($itemname)) {
         return $itemname;
-    }
-    elseif (!empty($description)) {
+    } elseif (!empty($description)) {
         return $description;
-    }
-    else {
+    } else {
         return "Unknown";
     }
-}
-
-function check_digit($barcode) {
-    $odd_sum = intval($barcode[0]) + intval($barcode[2]) + intval($barcode[4]) + intval($barcode[6]) + intval($barcode[8]) + intval($barcode[10]);
-    $odd_pos = $odd_sum * 3;
-    $even_sum = intval($barcode[1]) + intval($barcode[3]) + intval($barcode[5]) + intval($barcode[7]) + intval($barcode[9]);
-    $total = $odd_pos + $even_sum;
-    $digit = 10 - ($total % 10);
-    return $digit;
-}
-
-function query_db($query, $query_params) {
-    global $db;
-    
 }
 ?>
 
