@@ -64,7 +64,7 @@ public class LoginActivity extends Activity {
                         startActivity(intent);
                     }
                     else {
-                        Toast.makeText(context, "Login failure", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Register failure", Toast.LENGTH_LONG).show();
                     }
                 }
             }

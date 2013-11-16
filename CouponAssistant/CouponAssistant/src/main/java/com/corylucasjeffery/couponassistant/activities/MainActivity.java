@@ -32,6 +32,10 @@ import com.google.zxing.integration.android.IntentResult;
 /*
     TODO Test User Login stuff
     TODO Make Shopping Cart Activity with split screen barcode / image
+        --ShowCouponsActivity saves image to local folder and appends fileName, upc#, barcode to sharedPrefs
+        --Then CheckoutActivity reads the sharedPrefs and loads image full-screen
+        --Tap to dismiss image and load next image from sharedPrefs until q empty.
+        --Then post all upc's to bought
     TODO Make CouponView class to use in CouponViewAdapter for Shopping Cart Activity
     TODO Make Statistics Activity
     TODO Modify Coupon class and list_coupon.xml to show pertinent data

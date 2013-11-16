@@ -20,5 +20,8 @@
     <string name="title_activity_show_coupons">Available Coupons</string>
     <string name="coupon_header_left"><u>Discount Amt</u>.</string>
     <string name="coupon_header_right"><u>Limitations</u></string>
+    <string name="title_activity_checkout">Checkout Activity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 
 </resources>
