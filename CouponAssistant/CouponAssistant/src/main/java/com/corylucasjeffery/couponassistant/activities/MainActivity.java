@@ -77,7 +77,6 @@ public class MainActivity extends FragmentActivity
         }
         if (mPreview != null) {
             preview = (FrameLayout) findViewById(R.id.camera_preview);
-            preview.addView(mPreview);
         }
 
         initializeClickyThings();
@@ -86,22 +85,15 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onPause() {
         super.onPause();
-        preview.setVisibility(View.GONE);
         mCamera.release();
+        preview.removeView(mPreview);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            mCamera.reconnect();
-            FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-            //preview.removeView(mPreview);
-            preview.setVisibility(View.VISIBLE);
-        } catch (IOException ie) {
-            ie.printStackTrace();
-        }
+            preview.addView(mPreview);
     }
 
     @Override
