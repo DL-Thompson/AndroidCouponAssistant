@@ -54,6 +54,7 @@ public class MainActivity extends FragmentActivity
     private String imageBlob = "no-image-data-found";
     private int clicks = 0;
     private Context context;
+    private FrameLayout preview;
     public static final String PREFS_CART = "CouponShoppingCart";
 
     public static final String EXTRA_MESSAGE_UPC =
@@ -75,7 +76,7 @@ public class MainActivity extends FragmentActivity
                 mPreview = new CameraPreview(this, mCamera);
         }
         if (mPreview != null) {
-            FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+            preview = (FrameLayout) findViewById(R.id.camera_preview);
             preview.addView(mPreview);
         }
 
@@ -85,7 +86,22 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onPause() {
         super.onPause();
+        preview.setVisibility(View.GONE);
         mCamera.release();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            mCamera.reconnect();
+            FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+            //preview.removeView(mPreview);
+            preview.setVisibility(View.VISIBLE);
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        }
     }
 
     @Override
