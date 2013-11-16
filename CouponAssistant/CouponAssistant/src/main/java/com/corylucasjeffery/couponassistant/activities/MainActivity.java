@@ -30,7 +30,6 @@ import com.google.zxing.integration.android.IntentResult;
 
 
 /*
-    TODO Test User Login stuff
     TODO Make Shopping Cart Activity with split screen barcode / image
         --ShowCouponsActivity saves image to local folder and appends fileName, upc#, barcode to sharedPrefs
         --Then CheckoutActivity reads the sharedPrefs and loads image full-screen
@@ -52,9 +51,12 @@ public class MainActivity extends FragmentActivity
     private String upc = "";
     private int clicks = 0;
     private Context context;
+    public static final String PREFS_CART = "CouponShoppingCart";
 
     public static final String EXTRA_MESSAGE_UPC =
-            "com.corylucasjeffery.couponassistant.activities.MESSAGE";
+            "com.corylucasjeffery.couponassistant.activities.MESSAGE_UPC";
+    public static final String EXTRA_MESSAGE_FILE_NAME =
+            "com.corylucasjeffery.couponassistant.activities.MESSAGE_IMAGE";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +69,14 @@ public class MainActivity extends FragmentActivity
             FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
             preview.addView(mPreview);
         }
-        Button scanButton = (Button) findViewById(R.id.scan_button);
 
+        Button scanButton = (Button) findViewById(R.id.scan_button);
         scanButton.setOnClickListener(this);
+
+        //View footerView = findViewById(R.id.footer_layout);
+        //View footer_xml = main_xml.findViewById(R.id.footer_main);
+        //Button cartButton = (Button) footerView.findViewById(R.id.footer_shopping_cart);
+        //cartButton.setOnClickListener(this);
 
         context = this;
     }
@@ -88,6 +95,9 @@ public class MainActivity extends FragmentActivity
             IntentIntegrator scanIntegrator = new IntentIntegrator(this);
             //start scanning
             scanIntegrator.initiateScan();
+        }
+        else if (v.getId()==R.id.footer_shopping_cart) {
+            openCart();
         }
     }
 
@@ -156,7 +166,9 @@ public class MainActivity extends FragmentActivity
     }
 
     private void openCart() {
-        Toast.makeText(this, "Shopping Cart", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(context, CheckoutActivity.class);
+        Log.v(TAG, "starting checkout");
+        startActivity(intent);
     }
 
     private void openStats() {
@@ -177,6 +189,8 @@ public class MainActivity extends FragmentActivity
         Intent intent = new Intent(context, ShowCouponsActivity.class);
         String message = upc;
         intent.putExtra(EXTRA_MESSAGE_UPC, message);
+        String file = "";
+        intent.putExtra(EXTRA_MESSAGE_FILE_NAME, file);
         Log.v(TAG, "starting show coupons intent");
         startActivity(intent);
     }
