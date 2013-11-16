@@ -161,7 +161,7 @@ public class MainActivity extends FragmentActivity
 
     public void storeItem() {
         PhpWrapper db = new PhpWrapper();
-        db.disconnect();
+        //db.disconnect();
         db.submitItem(upc);
         Toast.makeText(this, "Item submitted", Toast.LENGTH_LONG).show();
     }
@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity
 
     public void submitCoupon() {
         PhpWrapper db = new PhpWrapper();
-        db.disconnect();
+        //db.disconnect();
         db.submitCoupon(upc, exp_date, null);
         Toast.makeText(this, "Coupon submitted", Toast.LENGTH_LONG).show();
     }

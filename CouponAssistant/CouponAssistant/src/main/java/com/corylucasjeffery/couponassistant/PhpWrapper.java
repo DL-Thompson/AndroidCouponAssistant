@@ -38,12 +38,14 @@ public class PhpWrapper {
     }
 
     public ArrayList<Coupon> getCoupons(String itemUpc) {
-        ArrayList<Coupon> coupons = new ArrayList<Coupon>();
-        String fakeExp = "2013/12/31";
-        Coupon c = new Coupon(itemUpc, fakeExp);
-        coupons.add(c);
-        coupons.add(c);
-        return coupons;
+        if (connected) {
+            ArrayList<Coupon> coupons = new ArrayList<Coupon>();
+            String fakeExp = "2013/12/31";
+            Coupon c = new Coupon(itemUpc, fakeExp);
+            coupons.add(c);
+            coupons.add(c);
+            return coupons;
+        }
     }
 
     public void getItems(String couponUPC) {
@@ -54,14 +56,15 @@ public class PhpWrapper {
     public boolean submitLogin(String user, String pass, String first, String last, Activity activity) {
         DbUserRegister dbUser = new DbUserRegister(user, pass, first, last, activity);
         boolean result = false;
-        try {
-            result = dbUser.execute().get();
-        } catch (InterruptedException ie) {
-            Log.v(TAG, "Interrupted Exception");
-        } catch (ExecutionException ee) {
-            Log.v(TAG, "Execution Exception");
+        if(connected) {
+            try {
+                result = dbUser.execute().get();
+            } catch (InterruptedException ie) {
+                Log.v(TAG, "Interrupted Exception");
+            } catch (ExecutionException ee) {
+                Log.v(TAG, "Execution Exception");
+            }
         }
-
         return result;
     }
 }
