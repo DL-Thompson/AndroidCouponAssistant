@@ -188,7 +188,9 @@ public class MainActivity extends FragmentActivity
     }
 
     private void openStats() {
-        Toast.makeText(this, "Statistics", Toast.LENGTH_LONG).show();
+        Log.v(TAG, "start statistics");
+        Intent intent = new Intent(context, StatisticsActivity.class);
+        startActivity(intent);
     }
 
     private void openManualEntry() {

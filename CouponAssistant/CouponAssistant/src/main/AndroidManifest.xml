@@ -47,6 +47,10 @@
             android:name="com.corylucasjeffery.couponassistant.activities.CheckoutActivity"
             android:label="@string/title_activity_checkout" >
         </activity>
+        <activity
+            android:name="com.corylucasjeffery.couponassistant.activities.StatisticsActivity"
+            android:label="@string/title_activity_statistics" >
+        </activity>
     </application>
 
 </manifest>

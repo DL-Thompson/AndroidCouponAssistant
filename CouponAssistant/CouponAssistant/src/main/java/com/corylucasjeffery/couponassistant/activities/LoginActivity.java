@@ -23,7 +23,7 @@ public class LoginActivity extends Activity {
     private EditText user;
     private EditText pw;
     private Context context;
-    private Activity activity;
+    //private Activity activity;
     private final String TAG = "LOGIN";
 
     @Override
@@ -32,7 +32,7 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         context = this;
-        activity = this;
+        //activity = this;
 
         user = (EditText) findViewById(R.id.field_login);
         pw = (EditText) findViewById(R.id.field_password);
