@@ -1,8 +1,10 @@
 package com.corylucasjeffery.couponassistant;
 
+import android.app.Activity;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class PhpWrapper {
 
@@ -11,7 +13,8 @@ public class PhpWrapper {
     UserInfo user;
 
     public PhpWrapper() {
-        user = new UserInfo("user1", "pass1");
+        if(user == null)
+            user = new UserInfo("user1", "pass1", "name", "name");
         connected = true;
     }
 
@@ -46,5 +49,19 @@ public class PhpWrapper {
     public void getItems(String couponUPC) {
         //TODO implement getItems()
         Log.v(TAG, "getItems() not implemented yet");
+    }
+
+    public boolean submitLogin(String user, String pass, String first, String last, Activity activity) {
+        DbUserRegister dbUser = new DbUserRegister(user, pass, first, last, activity);
+        boolean result = false;
+        try {
+            result = dbUser.execute().get();
+        } catch (InterruptedException ie) {
+            Log.v(TAG, "Interrupted Exception");
+        } catch (ExecutionException ee) {
+            Log.v(TAG, "Execution Exception");
+        }
+
+        return result;
     }
 }

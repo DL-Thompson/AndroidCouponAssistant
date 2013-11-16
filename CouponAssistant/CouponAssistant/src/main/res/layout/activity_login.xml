@@ -8,6 +8,26 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:text=""
+        android:id="@+id/field_firstName"
+        android:hint="Enter first name"
+        android:padding="15dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:text=""
+        android:id="@+id/field_lastName"
+        android:hint="Enter last name"
+        android:padding="15dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
         android:text=""
@@ -32,4 +52,5 @@
         android:id="@+id/button_register"
         android:layout_gravity="right"
         android:layout_marginTop="20dp" />
+
 </LinearLayout>

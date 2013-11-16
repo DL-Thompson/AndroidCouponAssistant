@@ -27,6 +27,17 @@ import com.corylucasjeffery.couponassistant.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+
+
+/*
+    TODO Test User Login stuff
+    TODO Make Shopping Cart Activity with split screen barcode / image
+    TODO Make CouponView class to use in CouponViewAdapter for Shopping Cart Activity
+    TODO Make Statistics Activity
+    TODO Modify Coupon class and list_coupon.xml to show pertinent data
+    TODO Make sure phpwrapper receives in DbShowCoupon correctly
+ */
+
 public class MainActivity extends FragmentActivity
         implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 

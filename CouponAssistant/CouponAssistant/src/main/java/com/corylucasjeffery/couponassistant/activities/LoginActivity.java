@@ -11,14 +11,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.corylucasjeffery.couponassistant.PhpWrapper;
 import com.corylucasjeffery.couponassistant.R;
+import com.corylucasjeffery.couponassistant.UserInfo;
 
 public class LoginActivity extends Activity {
 
     private Button register;
+    private EditText firstName;
+    private EditText lastName;
     private EditText user;
     private EditText pw;
     private Context context;
+    private Activity activity;
     private final String TAG = "LOGIN";
 
     @Override
@@ -27,26 +32,40 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         context = this;
+        activity = this;
 
         user = (EditText) findViewById(R.id.field_login);
         pw = (EditText) findViewById(R.id.field_password);
+        firstName = (EditText) findViewById(R.id.field_firstName);
+        lastName = (EditText) findViewById(R.id.field_lastName);
         register = (Button) findViewById(R.id.button_register);
 
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String userText = user.getText().toString();
-                String pwText = user.getText().toString();
+                String pwText = pw.getText().toString();
+                String firstText = firstName.getText().toString();
+                String lastText = lastName.getText().toString();
                 if (userText == null || userText.equals("") || pwText == null || pwText.equals(""))
                 {
-                    Toast.makeText(context, "Both fields are required", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Email and password are required fields",
+                            Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    Log.v(TAG, "user: ["+userText+"] pw: ["+pwText+"]");
-                    Toast.makeText(context, "Logging in", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(context, MainActivity.class);
-                    startActivity(intent);
+                    PhpWrapper db = new PhpWrapper();
+                    boolean LoginSuccess = db.submitLogin(
+                                            userText, pwText, firstText, lastText, activity);
+
+                    if (LoginSuccess) {
+                        Toast.makeText(context, "Logging in", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        Toast.makeText(context, "Login failure", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -57,5 +76,15 @@ public class LoginActivity extends Activity {
         super.onBackPressed();
         Intent intent = new Intent(context, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    public void onDestroy() {
+        super.onDestroy();
+        finish();
     }
 }
