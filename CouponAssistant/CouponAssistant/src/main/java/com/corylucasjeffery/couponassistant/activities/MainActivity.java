@@ -67,33 +67,33 @@ public class MainActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
-
-        // get camera preview
-        if (mCamera == null)
-        {
-            mCamera = getCameraInstance();
-            if(mCamera != null)
-                mPreview = new CameraPreview(this, mCamera);
-        }
-        if (mPreview != null) {
-            preview = (FrameLayout) findViewById(R.id.camera_preview);
-        }
-
         initializeClickyThings();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mCamera.stopPreview();
         mCamera.release();
+        mCamera = null;
         preview.removeView(mPreview);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (mCamera == null)
+        {
+            mCamera = getCameraInstance();
+            if(mCamera != null) {
+                mPreview = new CameraPreview(this, mCamera);
+            }
+        }
+        if (mPreview != null) {
+            preview = (FrameLayout) findViewById(R.id.camera_preview);
             preview.addView(mPreview);
+            mCamera.startPreview();
+        }
     }
 
     @Override
