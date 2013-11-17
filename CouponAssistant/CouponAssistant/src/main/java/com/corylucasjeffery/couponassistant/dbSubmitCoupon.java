@@ -1,7 +1,9 @@
 package com.corylucasjeffery.couponassistant;
 
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -16,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,19 +33,28 @@ public class DbSubmitCoupon extends AsyncTask<String, String, Boolean>{
     private String barcode;
     private String exp_date;
     private String image_blob;
+    private Bitmap image;
 
-    public DbSubmitCoupon(String username, String password, String barcode, String exp_date, String image_blob)  {
+    public DbSubmitCoupon(String username, String password, String barcode, String exp_date, Bitmap image)  {
         this.username = username;
         this.password = password;
         this.barcode = barcode;
         this.exp_date = exp_date;
-        this.image_blob = image_blob;
+        this.image = image;
+
+        //Convert bmp to image_blob
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        this.image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] b = byteArrayOutputStream.toByteArray();
+        this.image_blob = Base64.encodeToString(b, Base64.DEFAULT);
     }
 
     @Override
     protected Boolean doInBackground(String... params) {
         int success = 0;
         try {
+
+
             //Prepare the post values
             List<NameValuePair> parameters = new ArrayList<NameValuePair>();
             parameters.add(new BasicNameValuePair("username", this.username));

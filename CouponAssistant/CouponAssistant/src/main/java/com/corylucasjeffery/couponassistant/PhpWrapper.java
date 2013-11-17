@@ -2,6 +2,7 @@ package com.corylucasjeffery.couponassistant;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class PhpWrapper {
         return result;
     }
 
-    public Boolean submitCoupon(String upc, String exp_date, String image) {
+    public Boolean submitCoupon(String upc, String exp_date, Bitmap image) {
         boolean result = false;
 
         if (connected) {

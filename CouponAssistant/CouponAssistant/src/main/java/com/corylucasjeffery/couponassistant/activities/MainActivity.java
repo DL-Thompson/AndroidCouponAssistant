@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -51,7 +53,7 @@ public class MainActivity extends FragmentActivity
     private CameraPreview mPreview = null;
     private String exp_date = "";
     private String upc = "";
-    private String imageBlob = "no-image-data-found";
+    private Bitmap imageBlob;
     private int clicks = 0;
     private Context context;
     private FrameLayout preview;
@@ -99,10 +101,20 @@ public class MainActivity extends FragmentActivity
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.scan_button){
-            //instantiate ZXing integration class
-            IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-            //start scanning
-            scanIntegrator.initiateScan();
+            //When the scan button is clicked, a picture is taken of the coupon
+            //to upload to the database. Once the picture has been received, the call
+            //can be made to the barcode scanner for it to use the camera.
+            Camera.PictureCallback mCall = new Camera.PictureCallback() {
+                @Override
+                public void onPictureTaken(byte[] bytes, Camera camera) {
+                    imageBlob = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    //instantiate ZXing integration class
+                    IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
+                    //start scanning
+                    scanIntegrator.initiateScan();
+                }
+            };
+            mCamera.takePicture(null, null, mCall);
         }
         else if (v.getId()==R.id.footer_shopping_cart) {
             openCart();
