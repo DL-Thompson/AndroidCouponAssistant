@@ -21,17 +21,6 @@ public class Statistics {
         this.month = month;
         this.year = year;
 
-        /*
-
-        ValueCodeDict valDict = new ValueCodeDict();
-        ParseUPC parse = new ParseUPC();
-
-        String valueCode = parse.getValueCode(upc);
-        String tempDiscount = valDict.getValue(valueCode);
-
-        this.discount = valDict.extractDiscount(tempDiscount);
-        this.limitations = valDict.extractLimitations(tempDiscount);
-         */
 
 
 
