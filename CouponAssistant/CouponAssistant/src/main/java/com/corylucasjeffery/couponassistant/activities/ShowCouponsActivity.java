@@ -60,7 +60,7 @@ public class ShowCouponsActivity extends ListActivity {
         SharedPreferences cart = getSharedPreferences(MainActivity.PREFS_CART, 0);
         SharedPreferences.Editor editor = cart.edit();
         String imageFileName = "";
-        editor.putString(selectedCoupon.getUpc(), imageFileName);
+        editor.putString(selectedCoupon.getUpc(), selectedCoupon.getImage());
         editor.commit();
 
         // go back to scan page

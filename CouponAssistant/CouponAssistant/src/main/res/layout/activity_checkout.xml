@@ -10,7 +10,7 @@
         >
 
         <ImageView
-            android:id="@+id/myimage"
+            android:id="@+id/checkout_barcode_image"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/previous_btn"
@@ -25,11 +25,4 @@
         android:layout_height="wrap_content">
         <include layout="@layout/footer_cart" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Checkout not yet done, fools!"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
 </RelativeLayout>
