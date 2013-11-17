@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.ImageView;
 
 
 public class Coupon {
@@ -35,4 +36,8 @@ public class Coupon {
     public String getDisc() { return discount; }
     public String getLimits() { return limitations; }
     public String getImage() { return image; }
+    public void getConvertedImage(ImageView iv) {
+        BlobtoBMP converter = new BlobtoBMP(iv, this.image);
+        converter.execute();
+    }
 }
