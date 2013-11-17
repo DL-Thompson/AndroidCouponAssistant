@@ -32,7 +32,7 @@ public class StatisticsActivity extends Activity {
         Statistics stats = db.getStatistics(this);
 
         TextView boughtText = (TextView) findViewById(R.id.list_statistics_bought);
-        boughtText.setText("Items Bought: " + stats.getBought());
+        boughtText.setText("Unique Items Bought: " + stats.getBought());
         TextView totalText = (TextView) findViewById(R.id.list_statistics_total);
         totalText.setText("Total Coupons Submitted: " + stats.getTotal());
         TextView dayText = (TextView) findViewById(R.id.list_statistics_day);
