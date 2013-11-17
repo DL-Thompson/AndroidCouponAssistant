@@ -33,20 +33,13 @@ public class DbSubmitCoupon extends AsyncTask<String, String, Boolean>{
     private String barcode;
     private String exp_date;
     private String image_blob;
-    private Bitmap image;
 
-    public DbSubmitCoupon(String username, String password, String barcode, String exp_date, Bitmap image)  {
+    public DbSubmitCoupon(String username, String password, String barcode, String exp_date, String image)  {
         this.username = username;
         this.password = password;
         this.barcode = barcode;
         this.exp_date = exp_date;
-        this.image = image;
-
-        //Convert bmp to image_blob
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        this.image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] b = byteArrayOutputStream.toByteArray();
-        this.image_blob = Base64.encodeToString(b, Base64.DEFAULT);
+        this.image_blob = image;
     }
 
     @Override

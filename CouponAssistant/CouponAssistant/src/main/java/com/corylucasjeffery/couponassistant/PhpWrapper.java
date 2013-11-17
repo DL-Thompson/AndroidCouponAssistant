@@ -42,7 +42,7 @@ public class PhpWrapper {
         return result;
     }
 
-    public Boolean submitCoupon(String upc, String exp_date, Bitmap image) {
+    public Boolean submitCoupon(String upc, String exp_date, String image) {
         boolean result = false;
 
         if (connected) {

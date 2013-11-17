@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.corylucasjeffery.couponassistant.BMPtoBlob;
 import com.corylucasjeffery.couponassistant.CameraPreview;
 import com.corylucasjeffery.couponassistant.DateChooserDialog;
 import com.corylucasjeffery.couponassistant.ManualEntryDialog;
@@ -30,6 +31,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 
 
@@ -53,10 +55,12 @@ public class MainActivity extends FragmentActivity
     private CameraPreview mPreview = null;
     private String exp_date = "";
     private String upc = "";
-    private Bitmap imageBlob;
+    private String imageBlob;
+    private Bitmap image;
     private int clicks = 0;
     private Context context;
     private FrameLayout preview;
+    private BMPtoBlob imageConvert;
     public static final String PREFS_CART = "CouponShoppingCart";
 
     public static final String EXTRA_MESSAGE_UPC =
@@ -107,7 +111,7 @@ public class MainActivity extends FragmentActivity
             Camera.PictureCallback mCall = new Camera.PictureCallback() {
                 @Override
                 public void onPictureTaken(byte[] bytes, Camera camera) {
-                    imageBlob = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     //instantiate ZXing integration class
                     IntentIntegrator scanIntegrator = new IntentIntegrator(MainActivity.this);
                     //start scanning
@@ -240,7 +244,11 @@ public class MainActivity extends FragmentActivity
     }
 
     public void storeCoupon() {
+        //Begin image conversion so it can be working while user is selecting date
+        this.imageConvert = new BMPtoBlob(image);
+        this.imageConvert.execute();
         //popup, ask for exp-date
+        Log.d(TAG, "Date chooser beginning.");
         DateChooserDialog dpd = new DateChooserDialog();
         dpd.show(getFragmentManager(), "DatePicker");
         // when picker finishes, it calls submitCoupon
@@ -249,6 +257,14 @@ public class MainActivity extends FragmentActivity
     public void submitCoupon() {
         PhpWrapper db = new PhpWrapper();
         Log.v(TAG, "upc in submit:"+upc);
+        try {
+            imageBlob = this.imageConvert.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG,"Submitting coupon.");
         boolean success = db.submitCoupon(upc, exp_date, imageBlob);
         if (success)
             Toast.makeText(this, "Coupon submitted", Toast.LENGTH_SHORT).show();
