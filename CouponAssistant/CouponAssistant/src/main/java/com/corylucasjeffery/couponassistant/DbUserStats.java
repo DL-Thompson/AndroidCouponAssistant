@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DbUserStats extends AsyncTask<String, Void, ArrayList<Statistics>> {
-    private String POST_COUPON_URL = "http://dlthompson81.byethost24.com/CouponPHP/form_code/get_coupon.php";
+    private String POST_COUPON_URL = "http://dlthompson81.byethost24.com/CouponPHP/form_code/statistics.php";
 
     private final String TAG = "GET-COUP";
     private String username;
