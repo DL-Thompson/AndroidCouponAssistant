@@ -2,6 +2,7 @@ package com.corylucasjeffery.couponassistant;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
@@ -41,5 +42,8 @@ public class Coupon {
     public void getConvertedImage(ImageView iv) {
         BlobtoBMP converter = new BlobtoBMP(iv, this.image);
         converter.execute();
+    }
+    public void getGeneratedImage(ImageView iv) {
+
     }
 }

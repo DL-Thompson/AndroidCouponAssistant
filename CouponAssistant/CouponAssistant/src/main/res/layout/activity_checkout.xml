@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <RelativeLayout
+    <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -14,9 +14,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/previous_btn"
+            android:layout_weight="1"
+            />
+        <ImageView
+            android:id="@+id/checkout_barcode_generated"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             />
 
-    </RelativeLayout>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/footer_container_cart"
         android:layout_alignParentBottom="true"

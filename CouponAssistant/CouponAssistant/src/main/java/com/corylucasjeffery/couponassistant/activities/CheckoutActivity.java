@@ -34,6 +34,7 @@ import java.util.ArrayList;
 public class CheckoutActivity extends Activity implements View.OnClickListener {
 
     private ImageView couponImage;
+    private ImageView generatedImage;
 
     private Context context;
 
@@ -54,11 +55,14 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
         ImageView forwardButton = (ImageView) findViewById(R.id.footer_cart_forward);
         ImageView discardButton = (ImageView) findViewById(R.id.footer_cart_discard);
         couponImage = (ImageView) findViewById(R.id.checkout_barcode_image);
+        generatedImage = (ImageView) findViewById(R.id.checkout_barcode_generated);
+
         //listeners
         backButton.setOnClickListener(this);
         forwardButton.setOnClickListener(this);
         discardButton.setOnClickListener(this);
         couponImage.setOnClickListener(this);
+        generatedImage.setOnClickListener(this);
     }
 
     @Override
@@ -76,6 +80,9 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
             case R.id.checkout_barcode_image:
                 purchased();
                 return;
+            case R.id.checkout_barcode_generated:
+                purchased();
+                return;
             default:
         }
     }
@@ -85,6 +92,7 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
         if (!cart.isEmpty()) {
             Coupon c = cart.getCurrentCoupon();
             c.getConvertedImage(couponImage);
+            c.getGeneratedImage(generatedImage);
         }
         else {
             purchased();
@@ -104,6 +112,7 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
             return;
         }
         c.getConvertedImage(couponImage);
+        c.getGeneratedImage(generatedImage);
     }
 
     public void nextCoupon() {
@@ -120,6 +129,7 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
         }
 
         c.getConvertedImage(couponImage);
+        c.getGeneratedImage(generatedImage);
     }
 
     public void removeCoupon() {
@@ -132,6 +142,7 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
         else {
             Coupon c = cart.getCurrentCoupon();
             c.getConvertedImage(couponImage);
+            c.getGeneratedImage(generatedImage);
         }
     }
 
@@ -143,7 +154,6 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
             PhpWrapper db = new PhpWrapper();
             Coupon c = cart.getCurrentCoupon();
             Item i = cart.getCurrentItem();
-            Log.v(TAG, "coupon:"+c.getUpc()+" item:"+i.getUpc()+" exp:"+c.getExp());
             boolean success = db.purchaseItem(i.getUpc(), c.getUpc(), c.getExp());
             if (success) {
                 Toast.makeText(this, "Submitted to db", Toast.LENGTH_SHORT).show();
@@ -154,12 +164,14 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
             if (!cart.isEmpty()) {
                 Coupon coupon = cart.getCurrentCoupon();
                 coupon.getConvertedImage(couponImage);
+                coupon.getGeneratedImage(generatedImage);
             }
         }
         // if there were no more to display, show cart finished.  next click will return to main
         if (cart.isEmpty() && !returnToMain) {
             Drawable drawable = getResources().getDrawable(R.drawable.thumbs_up);
             couponImage.setImageDrawable(drawable);
+
             Toast.makeText(this, "Shopping Cart Empty", Toast.LENGTH_LONG).show();
             returnToMain = true;
         }
