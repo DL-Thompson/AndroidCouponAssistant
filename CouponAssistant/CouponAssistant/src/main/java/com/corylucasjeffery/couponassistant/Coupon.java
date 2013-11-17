@@ -11,13 +11,14 @@ public class Coupon {
     private String exp_date;
     private String discount="";
     private String limitations="";
-    private Bitmap image;
+    private String image;
 
     private final String TAG = "COUPON";
 
     public Coupon(String upc, String exp_date, String img) {
         this.upc = upc;
         this.exp_date = exp_date;
+        this.image = img;
 
         ValueCodeDict valDict = new ValueCodeDict();
         ParseUPC parse = new ParseUPC();
@@ -27,14 +28,15 @@ public class Coupon {
 
         this.discount = valDict.extractDiscount(tempDiscount);
         this.limitations = valDict.extractLimitations(tempDiscount);
-
-        byte[] decodeByte = Base64.decode(img, 0);
-        image = BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.length);
     }
 
     public String getUpc() { return upc; }
     public String getExp() { return exp_date; }
     public String getDisc() { return discount; }
     public String getLimits() { return limitations; }
-    public Bitmap getImage() { return image; }
+    public Bitmap getImage() {
+        byte[] decodeByte = Base64.decode(this.image, 0);
+        Bitmap image = BitmapFactory.decodeByteArray(decodeByte, 0, decodeByte.length);
+        return image;
+    }
 }
