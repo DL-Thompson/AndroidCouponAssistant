@@ -4,6 +4,7 @@ package com.corylucasjeffery.couponassistant;
  * Created by Caleb on 11/16/13.
  */
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -29,24 +30,24 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbUserStats extends AsyncTask<String, Void, ArrayList<Statistics>> {
+public class DbUserStats extends AsyncTask<String, Void, Statistics> {
     private String POST_COUPON_URL = "http://dlthompson81.byethost24.com/CouponPHP/form_code/statistics.php";
 
     private final String TAG = "GET-COUP";
     private String username;
     private String password;
 
-    private ListActivity parent;
+    private Activity parent;
 
-    public DbUserStats(String username, String password, String barcode, ListActivity activity)  {
+    public DbUserStats(String username, String password, Activity activity)  {
         this.username = username;
         this.password = password;
         this.parent = activity;
     }
 
     @Override
-    protected ArrayList<Statistics> doInBackground(String... params) {
-        ArrayList<Statistics> stats = new ArrayList<Statistics>();
+    protected Statistics doInBackground(String... params) {
+        Statistics stats;
         Log.v(TAG, "Started do in background");
         try {
             //Prepare the post values
@@ -76,30 +77,27 @@ public class DbUserStats extends AsyncTask<String, Void, ArrayList<Statistics>> 
             JSONObject jObject = new JSONObject(result);
             int success = jObject.getInt("success");
             String jmessage = jObject.getString("message");
+            //Log.v("STAT", "size=" + Integer.toString(success));
             if (success == PhpWrapper.SUCCESS_VALUE){
                 /*
                     {"success":1,"message":"Statistics found!","count_bought":1,"count_total":53,"count_day":33,"count_week":38,"count_month":53,"count_year":53}
                  */
-                JSONArray jsonArray = jObject.getJSONArray("statistics");
-                int size = jsonArray.length();
 
-                if (size == 0) {
-                    Statistics c = new Statistics("0", "0", "0", "0","0", "0");
-                    stats.add(c);
-                }
 
-                for(int i = 0; i < size; i++)
-                {
-                    JSONObject jsonItem = jsonArray.getJSONObject(i);
-                    String bought = jsonItem.getString("count_bought");
-                    String total = jsonItem.getString("count_total");
-                    String day = jsonItem.getString("count_day");
-                    String week = jsonItem.getString("count_week");
-                    String month = jsonItem.getString("count_month");
-                    String year = jsonItem.getString("count_year");
-                    Statistics c = new Statistics(bought, total, day, week, month, year);
-                    stats.add(c);
-                }
+
+
+
+                    String bought = jObject.getString("count_bought");
+                    String total = jObject.getString("count_total");
+                    String day = jObject.getString("count_day");
+                    String week = jObject.getString("count_week");
+                    String month = jObject.getString("count_month");
+                    String year = jObject.getString("count_year");
+
+                    Log.v("STAT", "here");
+                    stats = new Statistics(bought, total, day, week, month, year);
+
+
             }
             else
             {
@@ -109,16 +107,34 @@ public class DbUserStats extends AsyncTask<String, Void, ArrayList<Statistics>> 
                 String emptyWeek = "";
                 String emptyMonth = "";
                 String emptyYear = "";
-                Statistics c = new Statistics(emptyBought, emptyTotal, emptyDay, emptyWeek, emptyMonth, emptyYear);
+                stats = new Statistics(emptyBought, emptyTotal, emptyDay, emptyWeek, emptyMonth, emptyYear);
             }
 
         } catch (IOException e) {
+            String emptyBought = "";
+            String emptyTotal = "";
+            String emptyDay = "";
+            String emptyWeek = "";
+            String emptyMonth = "";
+            String emptyYear = "";
+            stats = new Statistics(emptyBought, emptyTotal, emptyDay, emptyWeek, emptyMonth, emptyYear);
             e.printStackTrace();
         } catch (JSONException e) {
+            String emptyBought = "";
+            String emptyTotal = "";
+            String emptyDay = "";
+            String emptyWeek = "";
+            String emptyMonth = "";
+            String emptyYear = "";
+            stats = new Statistics(emptyBought, emptyTotal, emptyDay, emptyWeek, emptyMonth, emptyYear);
             e.printStackTrace();
         }
+        Log.v("STAT", "yep");
+
+
         return stats;
     }
+
 
     @Override
     protected void onPreExecute() {
@@ -126,7 +142,7 @@ public class DbUserStats extends AsyncTask<String, Void, ArrayList<Statistics>> 
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Statistics> result) {
+    protected void onPostExecute (Statistics result) {
         //super.onPostExecute(result);
         ProgressBarHelper.closeProgressBar();
     }

@@ -5,6 +5,8 @@ import android.app.ListActivity;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.corylucasjeffery.couponassistant.activities.Statistics;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -81,6 +83,48 @@ public class PhpWrapper {
         }
 
         return coupons;
+    }
+
+    public Statistics getStatistics(Activity activity) {
+        Statistics stats;
+        if (connected) {
+            DbUserStats db = new DbUserStats(user.getUserName(), user.getPass(), activity);
+            try {
+                Log.v(TAG, "execute getStats");
+                stats = db.execute().get();
+                Log.v("STAT", "post stat");
+            } catch (InterruptedException ie) {
+                String fakeBought = "0";
+                String fakeTotal = "0";
+                String fakeDay = "0";
+                String fakeWeek = "0";
+                String fakeMonth = "0";
+                String fakeYear = "0";
+                stats = new Statistics(fakeBought, fakeTotal, fakeDay, fakeWeek, fakeMonth, fakeYear);
+                ie.printStackTrace();
+            } catch (ExecutionException ee) {
+                String fakeBought = "0";
+                String fakeTotal = "0";
+                String fakeDay = "0";
+                String fakeWeek = "0";
+                String fakeMonth = "0";
+                String fakeYear = "0";
+                stats = new Statistics(fakeBought, fakeTotal, fakeDay, fakeWeek, fakeMonth, fakeYear);
+                ee.printStackTrace();
+            }
+        }
+        else {
+            String fakeBought = "0";
+            String fakeTotal = "0";
+            String fakeDay = "0";
+            String fakeWeek = "0";
+            String fakeMonth = "0";
+            String fakeYear = "0";
+            stats = new Statistics(fakeBought, fakeTotal, fakeDay, fakeWeek, fakeMonth, fakeYear);
+
+        }
+
+        return stats;
     }
 
     public void getItems(String couponUPC) {
