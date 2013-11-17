@@ -35,10 +35,7 @@ public class ShowCouponsActivity extends ListActivity {
         super.onCreate(savedInstanceState);
 
         context = this;
-        Log.v(TAG, "Show coupons started");
         setContentView(R.layout.activity_show_coupons);
-
-        Log.v(TAG, "Loaded content");
 
         //get the upc from intent
         Intent intent = getIntent();
@@ -56,7 +53,7 @@ public class ShowCouponsActivity extends ListActivity {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // Do something when a list item is clicked
-        Toast.makeText(context, "Loading Coupon to Cart", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Loading Coupon to Cart", Toast.LENGTH_SHORT).show();
         Coupon selectedCoupon = (Coupon) l.getAdapter().getItem(position);
 
         // add to shopping cart

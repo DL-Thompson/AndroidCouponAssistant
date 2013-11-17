@@ -30,4 +30,9 @@ public class ParseUPC {
         Log.v(TAG, "style: "+barcodeStyle);
         return barcodeStyle;
     }
+
+    public String getValueCode(String upc) {
+        String valueCode = upc.substring(9, 11);
+        return valueCode;
+    }
 }

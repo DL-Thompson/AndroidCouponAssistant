@@ -1,13 +1,15 @@
 package com.corylucasjeffery.couponassistant;
 
 
+import android.util.Log;
+
 import java.util.HashMap;
 
 public class ValueCodeDict {
     private final String TAG = "VALUE";
 
     private static HashMap<String, String> values = new HashMap<String, String>();
-
+    private static HashMap<String, String> special = new HashMap<String, String>();
     static {
         values.put("00", "Cashier Input");
         values.put("01", "Free Item");
@@ -105,6 +107,13 @@ public class ValueCodeDict {
         values.put("96", "$4.50");
         values.put("98", "B2 $0.65");
         values.put("99", "$0.99");
+        special.put("B2", "Buy two or more");
+        special.put("B3", "Buy three or more");
+        special.put("B4", "Buy four or more");
+        special.put("B1G1", "Buy one get one free");
+        special.put("B2G1", "Buy two get one free");
+        special.put("B3G1", "Buy three get one free");
+        special.put("B4G1", "Buy four get one free");
     }
         /*
         BxGy = Buy x or more, Get y free (same product)
@@ -119,6 +128,39 @@ public class ValueCodeDict {
         else {
             return "value code not found";
         }
+    }
 
+    String extractDiscount(String value) {
+        String discount = "";
+        String startOfValue = value.substring(0,1);
+        if(startOfValue.equals("$")) {
+           discount = value;
+        }
+        else {
+            String[] temp = value.split(" ");
+            if (temp.length >= 1) {
+                discount = "--";
+            }
+            else if (temp.length == 2) {
+                discount = temp[1].trim();
+            }
+        }
+        return discount;
+    }
+
+    String extractLimitations(String value) {
+        String limitation = "";
+        Log.v(TAG, "start extract");
+        String startOfValue = value.substring(0, 1);
+        Log.v(TAG, "start of value: "+startOfValue);
+        if (!startOfValue.equals("$")) {
+            String[] split = value.split(" ");
+            String temp = split[0].trim();
+            Log.v(TAG, "key: "+temp);
+            if (special.containsKey(temp)) {
+                limitation = special.get(temp);
+            }
+        }
+        return limitation;
     }
 }

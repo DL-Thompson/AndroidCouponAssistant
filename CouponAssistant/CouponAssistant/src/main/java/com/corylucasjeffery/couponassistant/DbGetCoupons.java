@@ -13,6 +13,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,20 +71,34 @@ public class DbGetCoupons extends AsyncTask<String, Void, ArrayList<Coupon>> {
             }
             message.close();
             String result = sBuilder.toString();
-            Log.v(TAG, "got result");
             //Grab data from JSON string
             JSONObject jObject = new JSONObject(result);
             int success = jObject.getInt("success");
-            Log.v(TAG, "success code: "+success);
             String jmessage = jObject.getString("message");
-            Log.d(TAG, "message: "+jmessage);
             if (success == PhpWrapper.SUCCESS_VALUE){
+                /*
+                {"success":1,"message":"Coupons found!","coupons":[{"full_code":"549000011025","exp_date":"2013-12-31","image_blob":"image-not-found"},{"full_code":"549000011155","exp_date":"2013-11-30","image_blob":"image-not-found"},{"full_code":"549000011425","exp_date":"2014-02-01","image_blob":"image-not-found"}]}
+                 */
+                JSONArray jsonArray = jObject.getJSONArray("coupons");
+                int size = jsonArray.length();
 
+                if (size == 0) {
+                    Coupon c = new Coupon("999999999999", "2001-01-01", "no-coupon-found");
+                    coupons.add(c);
+                }
 
+                for(int i = 0; i < size; i++)
+                {
+                    JSONObject jsonItem = jsonArray.getJSONObject(i);
+                    String upc = jsonItem.getString("full_code");
+                    String exp_date = jsonItem.getString("exp_date");
+                    String img = jsonItem.getString("image_blob");
+                    Coupon c = new Coupon(upc, exp_date, img);
+                    coupons.add(c);
+                }
             }
             else
             {
-                Log.d(TAG, "not found");
                 String emptyBarcode = "";
                 String emptyDate = "";
                 String emptyDescription = "No coupons found";
