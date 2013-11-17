@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.corylucasjeffery.couponassistant.Coupon;
 import com.corylucasjeffery.couponassistant.GlobalCart;
+import com.corylucasjeffery.couponassistant.Item;
+import com.corylucasjeffery.couponassistant.PhpWrapper;
 import com.corylucasjeffery.couponassistant.R;
 
 import java.io.ByteArrayOutputStream;
@@ -137,12 +139,21 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
         GlobalCart cart = ((GlobalCart)getApplicationContext());
         // if there is a coupon in list
         if (!cart.isEmpty()) {
+            // send statistics
+            PhpWrapper db = new PhpWrapper();
+            Coupon c = cart.getCurrentCoupon();
+            Item i = cart.getCurrentItem();
+            Log.v(TAG, "coupon:"+c.getUpc()+" item:"+i.getUpc()+" exp:"+c.getExp());
+            boolean success = db.purchaseItem(i.getUpc(), c.getUpc(), c.getExp());
+            if (success) {
+                Toast.makeText(this, "Submitted to db", Toast.LENGTH_SHORT).show();
+            }
             //remove it
             cart.removeFromCart();
             //if there's more, display next one
             if (!cart.isEmpty()) {
-                Coupon c = cart.getCurrentCoupon();
-                c.getConvertedImage(couponImage);
+                Coupon coupon = cart.getCurrentCoupon();
+                coupon.getConvertedImage(couponImage);
             }
         }
         // if there were no more to display, show cart finished.  next click will return to main

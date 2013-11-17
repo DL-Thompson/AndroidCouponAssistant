@@ -100,4 +100,17 @@ public class PhpWrapper {
         }
         return result;
     }
+
+    public boolean purchaseItem(String item_code, String coupon_code, String exp_date) {
+        DbPurchaseItem db = new DbPurchaseItem(user.getUserName(), user.getPass(), item_code, coupon_code, exp_date);
+        boolean result = false;
+        try {
+            result = db.execute().get();
+        } catch (InterruptedException ie) {
+            Log.v(TAG, "Interrupted Exception");
+        } catch (ExecutionException ee) {
+            Log.v(TAG, "Execution Exception");
+        }
+        return result;
+    }
 }
