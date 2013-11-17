@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.corylucasjeffery.couponassistant.Coupon;
 import com.corylucasjeffery.couponassistant.CouponAdapter;
+import com.corylucasjeffery.couponassistant.GlobalCart;
+import com.corylucasjeffery.couponassistant.Item;
 import com.corylucasjeffery.couponassistant.PhpWrapper;
 import com.corylucasjeffery.couponassistant.R;
 
@@ -55,13 +57,13 @@ public class ShowCouponsActivity extends ListActivity {
         // Do something when a list item is clicked
         Toast.makeText(context, "Loading Coupon to Cart", Toast.LENGTH_SHORT).show();
         Coupon selectedCoupon = (Coupon) l.getAdapter().getItem(position);
+        Item selectedItem = new Item(upc);
+
+        Log.v(TAG, "selected coupon upc:"+selectedCoupon.getUpc());
 
         // add to shopping cart
-        SharedPreferences cart = getSharedPreferences(MainActivity.PREFS_CART, 0);
-        SharedPreferences.Editor editor = cart.edit();
-        String imageFileName = "";
-        editor.putString(selectedCoupon.getUpc(), selectedCoupon.getImage());
-        editor.commit();
+        GlobalCart cart = ((GlobalCart)getApplicationContext());
+        cart.addToCart(selectedCoupon, selectedItem);
 
         // go back to scan page
         Intent intent = new Intent(this, MainActivity.class);

@@ -44,7 +44,6 @@ public class DbGetCoupons extends AsyncTask<String, Void, ArrayList<Coupon>> {
     @Override
     protected ArrayList<Coupon> doInBackground(String... params) {
         ArrayList<Coupon> coupons = new ArrayList<Coupon>();
-        Log.v(TAG, "Started do in background");
         try {
             //Prepare the post values
             List<NameValuePair> parameters = new ArrayList<NameValuePair>();

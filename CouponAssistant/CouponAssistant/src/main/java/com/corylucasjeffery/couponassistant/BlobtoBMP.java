@@ -26,6 +26,6 @@ public class BlobtoBMP extends AsyncTask<String, String, Bitmap>{
     @Override
     protected void onPostExecute(Bitmap bitmap) {
         super.onPostExecute(bitmap);
-        iv.setImageBitmap(bitmap);
+        iv.setImageBitmap(image);
     }
 }

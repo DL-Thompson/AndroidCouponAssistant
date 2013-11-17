@@ -32,6 +32,9 @@ public class ParseUPC {
     }
 
     public String getValueCode(String upc) {
+        if (upc.equals("empty")) {
+            return "--";
+        }
         String valueCode = upc.substring(9, 11);
         return valueCode;
     }

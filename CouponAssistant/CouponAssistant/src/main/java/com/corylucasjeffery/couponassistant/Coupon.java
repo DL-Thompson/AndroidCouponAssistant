@@ -26,6 +26,8 @@ public class Coupon {
         String valueCode = parse.getValueCode(upc);
         String tempDiscount = valDict.getValue(valueCode);
 
+        this.image = img;
+
         this.discount = valDict.extractDiscount(tempDiscount);
         this.limitations = valDict.extractLimitations(tempDiscount);
 

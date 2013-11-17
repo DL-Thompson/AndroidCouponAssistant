@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,101 +20,148 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.corylucasjeffery.couponassistant.Coupon;
+import com.corylucasjeffery.couponassistant.GlobalCart;
 import com.corylucasjeffery.couponassistant.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-public class CheckoutActivity extends Activity {
+public class CheckoutActivity extends Activity implements View.OnClickListener {
 
-    private int imageIndex = 0;
-    private int numImages = 0;
+    private ImageView couponImage;
 
     private Context context;
 
-    private ArrayList<String> upcs = new ArrayList<String>();
-    /*
-    private Integer[] mImageIds = {
-            R.raw.image1,
-            R.raw.image2,
-            R.raw.image3
-    };
-    */
+    private final String TAG = "CHECKOUT";
+
+    private boolean returnToMain = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
-        /*
-        context = this;
-        upcs.add("123456789012");
-        upcs.add("210987654321");
-        */
-        //showImage();
-       // AndroidBarcodeView view = new AndroidBarcodeView(this, "123456789012");
-        //setContentView(view);
+        getImageViews();
+        showImage();
     }
-    /*
-    private void showImage() {
 
-        drawBarcode(upcs.get(0));
-        //ImageView imgView = (ImageView) findViewById(R.id.checkout_barcode_image);
-        //BitmapDrawable mDrawable = getDrawable("123456789012");
-        //int imageResource = getResources().getIdentifier(getPackageName()+":drawable/"+mDrawable.toString(), null, null);
+    public void getImageViews() {
+        ImageView backButton = (ImageView) findViewById(R.id.footer_cart_back);
+        ImageView forwardButton = (ImageView) findViewById(R.id.footer_cart_forward);
+        ImageView discardButton = (ImageView) findViewById(R.id.footer_cart_discard);
+        couponImage = (ImageView) findViewById(R.id.checkout_barcode_image);
+        //listeners
+        backButton.setOnClickListener(this);
+        forwardButton.setOnClickListener(this);
+        discardButton.setOnClickListener(this);
+        couponImage.setOnClickListener(this);
+    }
 
-        if (mDrawable != null) {
-            imgView.setImageDrawable(mDrawable);
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.footer_cart_back:
+                previousCoupon();
+                return;
+            case R.id.footer_cart_forward:
+                nextCoupon();
+                return;
+            case R.id.footer_cart_discard:
+                removeCoupon();
+                return;
+            case R.id.checkout_barcode_image:
+                purchased();
+                return;
+            default:
+        }
+    }
+
+    public void showImage() {
+        GlobalCart cart = ((GlobalCart)getApplicationContext());
+        if (!cart.isEmpty()) {
+            Coupon c = cart.getCurrentCoupon();
+            c.getConvertedImage(couponImage);
         }
         else {
-            imgView.setImageDrawable(getResources().getDrawable(R.drawable.poop));
+            purchased();
+        }
+    }
+
+    public void previousCoupon() {
+        GlobalCart cart = ((GlobalCart)getApplicationContext());
+        if (cart.isEmpty()) {
+            Toast.makeText(this, "cart is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Coupon c = cart.getPreviousCoupon();
+        Log.v(TAG, "prev upc:"+c.getUpc());
+        if (c.getUpc().equals("empty")) {
+            Toast.makeText(this, "at first coupon", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        c.getConvertedImage(couponImage);
+    }
+
+    public void nextCoupon() {
+        GlobalCart cart = ((GlobalCart)getApplicationContext());
+        if (cart.isEmpty()) {
+            Toast.makeText(this, "cart is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Coupon c = cart.getNextCoupon();
+        Log.v(TAG, "prev upc:"+c.getUpc());
+        if (c.getUpc().equals("empty")) {
+            Toast.makeText(this, "at last coupon", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        c.getConvertedImage(couponImage);
+    }
+
+    public void removeCoupon() {
+        GlobalCart cart = ((GlobalCart)getApplicationContext());
+        cart.removeFromCart();
+        if (cart.isEmpty()) {
+            Toast.makeText(this, "cart is empty", Toast.LENGTH_SHORT).show();
+            purchased();
+        }
+        else {
+            Coupon c = cart.getCurrentCoupon();
+            c.getConvertedImage(couponImage);
+        }
+    }
+
+    public void purchased() {
+        GlobalCart cart = ((GlobalCart)getApplicationContext());
+        // if there is a coupon in list
+        if (!cart.isEmpty()) {
+            //remove it
+            cart.removeFromCart();
+            //if there's more, display next one
+            if (!cart.isEmpty()) {
+                Coupon c = cart.getCurrentCoupon();
+                c.getConvertedImage(couponImage);
+            }
+        }
+        // if there were no more to display, show cart finished.  next click will return to main
+        if (cart.isEmpty() && !returnToMain) {
+            Drawable drawable = getResources().getDrawable(R.drawable.thumbs_up);
+            couponImage.setImageDrawable(drawable);
+            Toast.makeText(this, "Shopping Cart Empty", Toast.LENGTH_LONG).show();
+            returnToMain = true;
+        }
+        else if (cart.isEmpty() && returnToMain) {
+            returnToMain = false;
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
 
     }
-    */
-    /*
-    private void drawBarcode(String upc) {
-        AndroidBarcodeView view = new AndroidBarcodeView(context, upc);
-        setContentView(view);
-    }
-    */
-    /*
-    private BitmapDrawable getDrawable(String upc) {
-        AndroidBarcodeView view = new AndroidBarcodeView(context, upc);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Bitmap bitmap = Bitmap.createBitmap(1000, 1000, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        BitmapDrawable mDrawable = new BitmapDrawable(getResources(), bitmap);
-        return mDrawable;
-    }
-    */
-    /*
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case (R.id.previousBtn):
-                imageIndex--;
-                if (imageIndex == -1) {
-                    imageIndex = numImages - 1;
-                }
-                showImage();
-                break;
-            case (R.id.nextBtn):
-                imageIndex++;
-                if (imageIndex == numImages) {
-                    imageIndex = 0;
-                }
-                showImage();
-                break;
-        }
-    }
-    */
 
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(context, MainActivity.class);
-        startActivity(intent);
     }
 
     public void onStop() {
