@@ -44,6 +44,7 @@ public class Coupon {
         converter.execute();
     }
     public void getGeneratedImage(ImageView iv) {
-
+        BarcodeGenerator generator = new BarcodeGenerator(iv, upc);
+        generator.getGeneratedBarcode();
     }
 }
