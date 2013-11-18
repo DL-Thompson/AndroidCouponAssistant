@@ -118,7 +118,7 @@ public class CheckoutActivity extends Activity implements View.OnClickListener {
             return;
         }
         c.getConvertedImage(couponImage);
-        c.getGeneratedImage(generatedImage);
+        generateBarcode(c);
     }
 
     public void nextCoupon() {
