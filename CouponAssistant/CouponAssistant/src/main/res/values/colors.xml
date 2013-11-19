@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="footer">#6F6F6F</color>
-    <color name="header">#6F6F6F</color>
+
+    <color name="footer_bg">#6F6F6F</color>
+    <color name="footer_text">#FFFFF0</color>
+    <color name="title_bar_color">#6F6F6F</color>
+    <color name="dividing_lines">#4fa5d5</color>
+    <color name="black_overlay">#66000000</color>
+
 </resources>

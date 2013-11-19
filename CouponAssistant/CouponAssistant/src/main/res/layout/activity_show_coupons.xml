@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dip" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/title_background"
+        android:padding="5dip">
+        <TextView
+            android:id="@+id/coupon_header_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coupon_header_left"
+            android:textColor="#ffffff"
+            android:padding="15dip"
+            android:layout_weight="1"
+            android:gravity="left"
+            />
+        <TextView
+            android:id="@+id/coupon_header_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/coupon_header_right"
+            android:textColor="#ffffff"
+            android:padding="15dp"
+            android:layout_weight="1"
+            android:gravity="right"/>
+
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="default text"
+        android:divider="@color/title_bar_color"
+        android:dividerHeight="2dp"/>
+
+</LinearLayout>

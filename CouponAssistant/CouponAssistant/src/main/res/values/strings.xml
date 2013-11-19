@@ -2,12 +2,31 @@
 <resources>
 
     <string name="app_name">Coupon Assistant</string>
-    <string name="title_section1">Item</string>
-    <string name="title_section2">Coupon</string>
-    <string name="title_section3">Section 3</string>
+    <!-- action menu names -->
     <string name="action_settings">Settings</string>
-    <string name="button_scan">SCAN</string>
-    <string name="fragment_item_text">ITEM TEXT</string>
-    <string name="fragment_coupon_text">COUPON TEXT</string>
+    <string name="action_search">Search</string>
+    <string name="action_refresh">Refresh</string>
+    <!-- overflow menu -->
+    <string name="menu_login">Login</string>
+    <string name="menu_stats">User Stats</string>
+    <string name="menu_shop_cart">Shopping Cart</string>
+    <string name="menu_settings">Settings</string>
+    <!-- buttons, text etc -->
+    <string name="button_scan">SCAN A BARCODE</string>
+    <!-- misc -->
+    <string name="labelLoading">Loading</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="date_chooser_title">Choose Expiration</string>
+    <string name="title_activity_show_coupons">Available Coupons</string>
+    <string name="coupon_header_left"><u>Discount Amt</u>.</string>
+    <string name="coupon_header_right"><u>Limitations</u></string>
+    <string name="title_activity_checkout">Checkout Activity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dialog_title_manually_add">Manually add a coupon</string>
+    <string name="dialog_ok_button">OK</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_hint_upc">Manual not implemented yet</string>
+    <string name="title_activity_statistics">StatisticsActivity</string>
 
 </resources>

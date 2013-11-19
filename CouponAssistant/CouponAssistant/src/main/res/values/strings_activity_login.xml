@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="title_activity_login">Login</string>
+
+    <string name="editUserBox">Email</string>
+    <string name="editPassBox">Password</string>
+    <string name="editFirstName">First name</string>
+    <string name="editLastName">Last name</string>
+    <string name="buttonLogin">Login or Register</string>
+
+</resources>

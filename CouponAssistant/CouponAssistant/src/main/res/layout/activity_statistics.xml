@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Bought -->
+    <TextView
+        android:id="@+id/list_statistics_bought"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:layout_alignParentLeft="true"
+        android:text="@string/app_name" />
+
+    <!-- Total -->
+    <TextView
+        android:id="@+id/list_statistics_total"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:text="@string/app_name"/>
+
+
+
+
+    <!-- Day -->
+    <TextView
+        android:id="@+id/list_statistics_day"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:text="@string/app_name"
+        android:layout_marginRight="48dp" />
+
+    <!-- Week -->
+    <TextView
+        android:id="@+id/list_statistics_week"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:text="@string/app_name"
+        />
+
+
+
+    <!-- Month -->
+    <TextView
+        android:id="@+id/list_statistics_month"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:text="@string/app_name"
+        android:layout_marginRight="181dp" />
+
+    <!-- Year -->
+    <TextView
+        android:id="@+id/list_statistics_year"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="20sp"
+        android:padding="10dp"
+        android:text="@string/app_name"/>
+
+</LinearLayout>

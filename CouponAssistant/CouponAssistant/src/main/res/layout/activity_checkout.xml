@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:id="@+id/checkout_barcode_image"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/previous_btn"
+            android:layout_weight="1"
+            />
+        <ImageView
+            android:id="@+id/checkout_barcode_generated"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/footer_container_cart"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/footer_cart" />
+    </LinearLayout>
+</RelativeLayout>

@@ -5,22 +5,52 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="14"
         android:targetSdkVersion="18" />
 
+    <!-- PERMISSIONS -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- FEATURES -->
+    <uses-feature android:name="android.hardware.camera" />
+
     <application
+        android:name="GlobalCart"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.corylucasjeffery.couponassistant.MainActivity"
+            android:name="com.corylucasjeffery.couponassistant.activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.corylucasjeffery.couponassistant.activities.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="com.corylucasjeffery.couponassistant.activities.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="com.corylucasjeffery.couponassistant.activities.ShowCouponsActivity"
+            android:label="@string/title_activity_show_coupons" >
+        </activity>
+        <activity
+            android:name="com.corylucasjeffery.couponassistant.activities.CheckoutActivity"
+            android:label="@string/title_activity_checkout" >
+        </activity>
+        <activity
+            android:name="com.corylucasjeffery.couponassistant.activities.StatisticsActivity"
+            android:label="@string/title_activity_statistics" >
         </activity>
     </application>
 
