@@ -1,8 +1,14 @@
 <?php
+<<<<<<< HEAD
 
 function submit($user_id, $coupon_id) {
     //Places the user and coupon into the submitted table.
     //Returns a true or false value for success
+=======
+function submit($post, $user_id, $coupon_id) {
+    //Places the user and coupon into the submitted table.
+    //Returns a true or false value
+>>>>>>> master
     global $db;
     try {
         //Prepare the query
@@ -11,6 +17,7 @@ function submit($user_id, $coupon_id) {
             ':coupon_id' => $coupon_id,
             ':user_id' => $user_id
         );
+<<<<<<< HEAD
 
         //Execute the query
         $stmt = $db->prepare($query);
@@ -29,6 +36,29 @@ function purchase($user_id, $item_id, $coupon_id) {
     //Places the user,item, and coupon into the bought table.
     //Returns a true or false value for success
     global $db;
+=======
+        
+        //Execute the query
+        $stmt = $db->prepare($query);
+        $result = $stmt->execute($query_params);     
+    } catch (PDOException $ex) {
+        response_error("Inserting coupon failed.");
+        return false;
+    }
+    return true;
+    
+}
+
+function purchase($post, $user_id, $item_id) {
+    //Places the user,item, and coupon into the bought table.
+    //Returns a true or false value
+    global $db;
+    $coupon_id = $post['coupon_barcode'];
+    $coupon_id = get_coupon_id($coupon_id);
+    if ($coupon_id === false) {
+        return false;
+    }
+>>>>>>> master
     try {
         //Prepare the query
         $query = "INSERT INTO bought (coupon_id, item_id, user_id) VALUES (:coupon_id, :item_id, :user_id)";
@@ -37,6 +67,7 @@ function purchase($user_id, $item_id, $coupon_id) {
             ':item_id' => $item_id,
             ':user_id' => $user_id
         );
+<<<<<<< HEAD
 
         //Execute the query
         $stmt = $db->prepare($query);
@@ -151,6 +182,18 @@ function get_items_bought_count($user_id) {
         response_error("Bought count failed.");
     }
     return 0;
+=======
+        
+        //Execute the query
+        $stmt = $db->prepare($query);
+        $result = $stmt->execute($query_params);   
+    } catch (PDOException $ex) {
+        response_error("Inserting coupon failed.");
+        return false;
+    }
+    return true;
+    
+>>>>>>> master
 }
 ?>
 

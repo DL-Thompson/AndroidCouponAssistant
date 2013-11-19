@@ -2,6 +2,7 @@
 
 require_once '../core/init.php';
 
+<<<<<<< HEAD
 //Check to be sure all required input is not blank
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -36,9 +37,33 @@ if ($user_id !== false) {
         } else {
             //Inserting into the Submitted table failed. Coupon will still be
             //stored in the database for other users to use, so it won't be removed.
+=======
+$user_id = login($_POST);
+if($user_id !== false) {
+    //If login was successful, try to post the coupon.
+    $coupon_id = post_coupon($_POST);
+    //Redo to check if coupon exists.
+    if ($coupon_id !== false) {
+        //If coupon was posted successfully, post the submitted relationship.
+        $submitted = submit($_POST, $user_id, $coupon_id);
+        if ($submitted === true) {
+            //Submitted by relationship was posted successfully.
+            //Return the info via JSON to the android device.
+            json_post(1, "Coupon submitted.");
+        }
+        else {
+            //Inserting into the Submitted table failed, the coupon should be
+            //removed here if we decide to.
+            //Return the failure message via JSON to the android device.
+>>>>>>> master
             response_error("Coupon Submitted by failed.");
         }
     }
 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> master
 ?>
 

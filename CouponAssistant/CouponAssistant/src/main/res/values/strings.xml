@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Coupon Assistant</string>
+    <string name="title_section1">Item</string>
+    <string name="title_section2">Coupon</string>
+    <string name="title_section3">Section 3</string>
+    <string name="action_settings">Settings</string>
+    <string name="button_scan">SCAN</string>
+    <string name="fragment_item_text">ITEM TEXT</string>
+    <string name="fragment_coupon_text">COUPON TEXT</string>
+
+</resources>

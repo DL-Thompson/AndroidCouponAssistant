@@ -2,6 +2,7 @@
 
 require_once '../core/init.php';
 
+<<<<<<< HEAD
 //Check to be sure all required input is not blank
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -20,5 +21,16 @@ if ($register !== false) {
 } else {
     response_error("Error registering user.");
 }
+=======
+$register = register($_POST);
+if ($register !== false) {
+    json_post(1, "User successfully registered.");
+}
+else {
+    json_post(0, "Error registering user.");
+}
+
+
+>>>>>>> master
 ?>
 
