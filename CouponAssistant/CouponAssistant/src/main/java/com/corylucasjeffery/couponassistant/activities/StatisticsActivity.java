@@ -1,19 +1,15 @@
 package com.corylucasjeffery.couponassistant.activities;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.corylucasjeffery.couponassistant.PhpWrapper;
 import com.corylucasjeffery.couponassistant.R;
-
-import java.util.ArrayList;
+import com.corylucasjeffery.couponassistant.Statistics;
 
 public class StatisticsActivity extends Activity {
 

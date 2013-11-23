@@ -1,4 +1,4 @@
-package com.corylucasjeffery.couponassistant.activities;
+package com.corylucasjeffery.couponassistant;
 
 /**
  * Created by Caleb on 11/16/13.

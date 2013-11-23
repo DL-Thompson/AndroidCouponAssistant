@@ -2,10 +2,7 @@ package com.corylucasjeffery.couponassistant;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.graphics.Bitmap;
 import android.util.Log;
-
-import com.corylucasjeffery.couponassistant.activities.Statistics;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
